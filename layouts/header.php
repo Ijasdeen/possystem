@@ -302,7 +302,7 @@ if(!isset($_SESSION['admin_name'])){
                 </li>
                 <li class="menu-item">
                   <a href="auth-register-basic.html" class="menu-link" target="_blank">
-                    <div data-i18n="Basic">Register</div>
+                    <div data-i18n="Basic">Registers</div>
                   </a>
                 </li>
                 <li class="menu-item">
