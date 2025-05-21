@@ -57,3 +57,6 @@ gulpfile.tmp.*
 /html-starter
 /html-demo
 /html-starter-demo
+
+# Custom ignored files
+connection.php
