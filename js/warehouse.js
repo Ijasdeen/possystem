@@ -23,7 +23,7 @@ $(document).ready(function(){
     $('body').on('click', '.deleteBranch', function (e) {
     e.preventDefault();
     const id = $(this).attr('myid');
-
+     
     if (confirm('Are you sure you want to delete this branch?')) {
         $.ajax({
             url: 'action.php',

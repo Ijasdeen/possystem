@@ -135,7 +135,98 @@ if (isset($_POST['deleteWarehouse'])) {
         echo "0"; // Invalid ID
     }
 }
+ if (isset($_POST['deleteCashiersection'])) {
+    $myid = $_POST['myid'];
 
+    // Use a prepared statement to avoid SQL injection
+    $stmt = $connection->prepare("DELETE FROM cashiers WHERE id = ?");
+    $stmt->bind_param("i", $myid); // "i" denotes integer type
+    $stmt->execute();
+
+    echo ($stmt->affected_rows > 0) ? 1 : 0;
+
+    $stmt->close();
+}
+
+
+
+
+ if(isset($_POST['showOffCashier'])){
+    $query = "SELECT * FROM cashiers";
+    $result = mysqli_query($connection,$query); 
+    $index =0; 
+    if($result){
+        if(mysqli_num_rows($result) >0 ){
+              while($row = mysqli_fetch_assoc($result)){
+                ?>
+                <tr>
+                    <td>
+                        <?php echo ++$index?>
+                    </td>
+                    <td>
+                        <?php echo $row['name']?>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+    Choose
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+    <li><a class="dropdown-item editCashiersection" myid="<?php echo $row['id']?>" name="<?php echo $row['name']?>" href="#"><i class="menu-icon tf-icons bx bx-edit"></i>&nbsp;Edit</a></li>
+    <li><a class="dropdown-item deleteCashier" myid="<?php echo $row['id']?>" href="#"><i class="menu-icon tf-icons bx bx-trash"></i>&nbsp;Delete</a></li>
+ 
+  </ul>
+</div>
+
+                    </td>
+                </tr>
+                <?php
+              }
+        }
+        else {
+            ?>
+              <tr>
+                <td>
+                    <span class="text text-danger fw-bold">No cashier found</span>
+                </td>
+              </tr>
+            <?php
+        }
+    } 
+    else {
+        echo mysqli_error($connection); 
+    }
+ }
+
+ if (isset($_POST['saveName'])) {
+    $name = ucfirst(trim($_POST['name']));  
+
+ 
+    $stmt = $connection->prepare("SELECT id FROM cashiers WHERE name = ?");
+    $stmt->bind_param("s", $name);
+    $stmt->execute();
+    $stmt->store_result();
+
+    if ($stmt->num_rows > 0) {
+        echo 12; // Name already exists
+        exit; 
+    } else {
+        // Insert new name
+        $insert = $connection->prepare("INSERT INTO cashiers (name) VALUES (?)");
+        $insert->bind_param("s", $name);
+        $insert->execute();
+
+        if ($insert->affected_rows > 0) {
+          echo 1; 
+        } else {
+            echo "Insert failed";
+        }
+
+        $insert->close();
+    }
+
+    $stmt->close();
+}
 
 
 if (isset($_POST['updateBranch'])) {

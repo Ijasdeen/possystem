@@ -255,14 +255,13 @@ if(!isset($_SESSION['admin_name'])){
               </a>
             </li>
 
- 
-              <li class="menu-item">
-              <a href="cashiers.php" class="menu-link" onclick="alert('It is under testing now'); return false;">
+               <li class="menu-item">
+              <a href="cashiers.php" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-user-circle"></i>
                   <div data-i18n="Analytics">Cashiers</div>
               </a>
             </li>
- 
+
             <li class="menu-header small text-uppercase d-none">
               <span class="menu-header-text">Pages</span>
             </li>
