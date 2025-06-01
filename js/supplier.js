@@ -7,8 +7,7 @@ $(document).ready(function(){
             type: 'POST',
             data: { fetchSuppliers: 44 },
             success: function(response) {
-                 
-                $('#extractsuppliers').html(response);
+                 $('#extractsuppliers').html(response);
             },
             error: function(xhr, status, error) {
                 toastr.error('Failed to fetch suppliers.');
@@ -17,7 +16,35 @@ $(document).ready(function(){
     }
 
     showOffSuppliers(); 
- 
+
+   $('#searchSuppliers').on('keyup', function() {
+        var value = $(this).val().toLowerCase();
+        $('#extractsuppliers tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().includes(value));
+        });
+    });
+
+
+
+    $('body').on('click', '.viewbankdetailssection', function() {
+    let bank_id = Number($(this).attr('bank_id'));
+       $.ajax({
+            url: 'action.php',
+            type: 'POST',
+            data: { bank_id: bank_id, viewbankdetails:55 },
+            success: function(response) {
+                 $('#myModal').modal('show'); 
+                 $('#accountNamesection').html(response); 
+
+             
+            },
+            error: function(xhr, status, error) {
+                toastr.error('Failed to fetch suppliers.');
+            }
+        });
+    
+});
+
     const getBankdetailsdata = (supplier_id_fk) => {
        
         $.ajax({
@@ -78,9 +105,7 @@ $(document).ready(function(){
           let myid = $(this).attr('myid'); 
           let supplier_id_fk = $(this).attr('supplier_id_fk'); 
 
-
-          
-          if(confirm("Are you sure you want to delete it?")){
+         if(confirm("Are you sure you want to delete it?")){
                 $.ajax({
                     url : 'action.php', 
                     method:'POST', 
@@ -93,8 +118,7 @@ $(document).ready(function(){
                             toastr.error("Bank detail has been removed"); 
                             getBankdetailsdata(supplier_id_fk); 
                            
-
-                        }
+                         }
                         else {
                             alert(data); 
                         }
@@ -254,6 +278,8 @@ $(document).ready(function(){
         }
     }
 
+    
+
     $('#supplierSaveform').on('submit',function(e){
         e.preventDefault(); 
         let supplier_name = $("#supplier_name").val(); 
@@ -268,6 +294,7 @@ $(document).ready(function(){
         let supplier_type = $('#supplier_type').val();
         let contactperson_mobile = $('#contactperson_mobile').val(); 
 
+
         if(contactperson_mobile!=''){
             if(contactperson_mobile.length!=10){
             toastr.info('Contact person mobile number should be 10 digits.');
@@ -279,7 +306,9 @@ $(document).ready(function(){
             $('#contactperson_mobile').css('border', '2px solid red').focus();
             return;
         }
+
         }
+ 
 
         if(contactperson_mobile2!=''){
             if(contactperson_mobile2.length!=10){

@@ -47,6 +47,16 @@ $(document).ready(function() {
        }); 
 
 
+       
+   $('#customersSearchdetails').on('keyup', function() {
+        var value = $(this).val().toLowerCase();
+        $('#showCustomers tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().includes(value));
+        });
+    });
+
+
+
        $('#updateCustomersform').on('submit',function(e){
             e.preventDefault();
              let customer_name = $('#ucustomer_name').val(); 

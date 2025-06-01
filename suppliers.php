@@ -1,8 +1,65 @@
 <?php
 require_once('layouts/header.php')
 ?>
-   
+
+<style>
+@media print {
+    body, html {
+        width: 80mm;
+        margin: 0;
+        padding: 0;
+    }
+
+    #printArea {
+        width: 72mm; /* Leave some margin for borders */
+        padding: 5mm;
+    }
+
+    button {
+        display: none;
+    }
+}
+</style>
+
+
 <div class="content-wrapper">
+
+
+
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Bank details</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+       <div id="allbankdetails">
+         <div class="text-center">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-body" id="accountNamesection">
+                 
+                </div>
+              </div>
+            </div>
+         </div>
+       </div>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 
              <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -181,8 +238,9 @@ require_once('layouts/header.php')
             <div class="container-xxl flex-grow-1 container-p-y">
 
       <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Home /</span> Suppliers</h4>
-
-               <div class="my-3">
+          <input type="search" placeholder="Search suppliers by mobile number, name, short name, email" 
+          class="form-control" id="searchSuppliers">
+             <div class="my-3">
                 <button class="btn btn-primary btn-sm" data-bs-target="#addCategoryModal" data-bs-toggle="modal">
                 <i class="menu-icon tf-icons bx bx-plus"></i> ADD Suppliers
                 </button>
@@ -190,11 +248,10 @@ require_once('layouts/header.php')
               <div class="card">
                 <h5 class="card-header"></h5>
                 <div class="table-responsive text-nowrap">
-                  <table class="table">
+                  <table class="table table-striped">
                     <thead>
                       <tr>
-                     
-                         <th>#</th>
+                          <th>#</th>
                         <th>Name</th>
                         <th>Mobile</th>
                         <th>Telephone</th>
@@ -207,8 +264,7 @@ require_once('layouts/header.php')
                         <th>Supplier category</th>
                         <th>Warehouse Address</th>
                         <th>Action</th>
-                         
-                      </tr>
+                       </tr>
                     </thead>
                    <tbody id="extractsuppliers">
 
@@ -250,3 +306,13 @@ require_once('layouts/footer.php');
 ?>
 
  <script src="js/supplier.js" defer></script>
+ <script>
+function printDiv(divId) {
+    var printContents = document.getElementById(divId).innerHTML;
+    var originalContents = document.body.innerHTML;
+
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+}
+</script>

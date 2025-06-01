@@ -112,19 +112,17 @@ require_once('layouts/header.php')
                 </div>
             </div>
 
-
-          
-
-              
+      
             <div class="container-xxl flex-grow-1 container-p-y">
-
-
+ 
             <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Home /</span> Customers</h4>
+            <input type="search" placeholder="Searc by Customer name, Customer mobile, NIC, Gender" name="addcustomers" id="customersSearchdetails" class="form-control">
 
                <div class="my-3">
                 <button class="btn btn-primary btn-sm" data-bs-target="#addCategoryModal" data-bs-toggle="modal">
                 <i class="menu-icon tf-icons bx bx-plus"></i> ADD Customers
                 </button>
+                
                </div>
               <div class="card">
                 <h5 class="card-header"></h5>
@@ -150,8 +148,8 @@ require_once('layouts/header.php')
                     <tfoot class="table-border-bottom-0">
                     <tr>
                       <th>Actions</th>
-                         <th>#</th>
-                         <th>Customer Name</th>
+                        <th>#</th>
+                       <th>Customer Name</th>
                         <th>Customer Mobile</th>
                         <th>Date of Birth</th>
                         <th>NIC</th>

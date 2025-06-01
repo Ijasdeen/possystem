@@ -38,9 +38,7 @@ require_once('layouts/header.php')
                                 <input type="tel"  class="form-control" id="email">
                               </div>  
                                  
-                                 
-                              
-
+                      
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -50,9 +48,7 @@ require_once('layouts/header.php')
                     </div>
                 </div>
             </div>
-
-
-
+ 
                         <div class="modal fade" id="brancheditModalsection" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -166,13 +162,21 @@ require_once('layouts/header.php')
 
             <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Home /</span> Branches</h4>
 
+              <div class="my-3">
+                <input type="search" placeholder="Search by name, address,mobile, landline, email" 
+                name="" id="branchesSearchlineup" class="form-control">
+              </div>
                <div class="my-3">
                 <button class="btn btn-primary btn-sm" data-bs-target="#addCategoryModal" data-bs-toggle="modal">
                 <i class="menu-icon tf-icons bx bx-plus"></i> Branches
                 </button>
+              
                </div>
               <div class="card">
                 <h5 class="card-header">All Branches</h5>
+                <div class="container">
+                  
+                </div>
                 <div class="table-responsive text-nowrap">
                   <table class="table">
                     <thead>

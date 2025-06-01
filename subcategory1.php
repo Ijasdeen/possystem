@@ -118,6 +118,10 @@ require_once('layouts/header.php')
 
             <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Home /</span> Sub category 1</h4>
 
+            
+               <div class="my-3">
+                <input type="search" name="" placeholder="Search By name or category code" id="searchCategories" class="form-control">
+               </div>
                <div class="my-3">
                 <button class="btn btn-primary btn-sm" data-bs-target="#addCategoryModal" data-bs-toggle="modal">
                 <i class="menu-icon tf-icons bx bx-plus"></i> ADD CATEGORY
@@ -167,3 +171,17 @@ require_once('layouts/footer.php');
 ?>
 
  <script src="js/subcategories.js" defer></script>
+
+ 
+ <script>
+    $(document).ready(function(){
+        
+   $('#searchCategories').on('keyup', function() {
+        var value = $(this).val().toLowerCase();
+        $('#showcategories tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().includes(value));
+        });
+    });
+
+    }); 
+ </script>

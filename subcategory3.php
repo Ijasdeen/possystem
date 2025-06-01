@@ -4,6 +4,33 @@ require_once('layouts/header.php')
  
 <div class="content-wrapper">
 
+
+             <div class="modal fade" id="showoffbankdetailssection" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary">
+                            <h5 class="modal-title text-white" id="addCategoryModalLabel">Supplier Bank details</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form id="subcategoryaddedform" method="POST">
+                            <div class="modal-body">
+                                 <div id="showoffbankdetails">
+
+                                 </div>
+                               
+  
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save Category</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+
              <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -153,6 +180,9 @@ require_once('layouts/header.php')
             <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Home /</span> Sub category 3</h4>
 
                <div class="my-3">
+                <input type="search" name="" placeholder="Search By name or category code" id="searchCategories" class="form-control">
+               </div>
+               <div class="my-3">
                 <button class="btn btn-primary btn-sm" data-bs-target="#addCategoryModal" data-bs-toggle="modal">
                 <i class="menu-icon tf-icons bx bx-plus"></i> ADD CATEGORY
                 </button>
@@ -207,3 +237,17 @@ require_once('layouts/footer.php');
 ?>
 
  <script src="js/subcategories3.js" defer></script>
+
+ 
+ <script>
+    $(document).ready(function(){
+        
+   $('#searchCategories').on('keyup', function() {
+        var value = $(this).val().toLowerCase();
+        $('#showinglineuphell tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().includes(value));
+        });
+    });
+
+    }); 
+ </script>

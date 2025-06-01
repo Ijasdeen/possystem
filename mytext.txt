@@ -1,0 +1,262 @@
+In the purcahse, 
+
+
+1) Enter key should be working from every part. 
+2) Item name should be considered as description 
+3) Quantity should be checked with sizes given 
+4) In the No of label, we should check if the given quantity of the product matches with tag only, we should be able to print 
+5) Invoice item name should be duplicated to item name field in purcahse 
+6) All text color should be bold and black 
+7) All keys should be working to create categories, color, brand, units and suppliers 
+8) Arrow key should be working to open create section in purcahse 
+9) The green box in the price details should be typeable as percentage 
+
+19)RN location should be set in settings. 
+    In case if the warehouse is chosen, braches should also should be displied to show 
+    Either branches or warehouse should be selectable. If the branch is selected, 
+    we shoul be able to put the product directly to branchess 
+
+Tag date should be given in barcode printer. 
+
+11) Barcode should be settings 
+   for example : Loop number with item code 
+   for example : 
+
+Validation  
+Minimum price should not be lesser than cost price
+
+
+Purcahse details post to accounts 
+1) Supplier name should be able to be selected 
+
+ purcahse NO || supplier name || supplier.inv.no || inv.amount 
+
+
+Supplier details 
+ID : 522 
+Name : Kiwi mullaithivu 
+Inv.no : 0101
+
+
+Overpament is what we had given in earlier stage. 
+
+"Cash" and "Credit" radio button show from which we give to, 
+
+Cash - only cash payment 
+Credit - only credit wth due days 
+
+That will be passed to particular supplier ledger. 
+It will be as follows : 
+1) That will be added to "current assets". 
+2) Accounts payable to be added when it is posted 
+3) Accounts payable will be only group of suppliers. 
+4) 
+
+Purcahse return 
+1) We can return the products to any suppliers 
+2) Return invoice number should be avoided 
+3) First number of the return invoice number should be "2". Other number would be same in return invoice no input field 
+4) In the barcode, if we type barcode item code would be selected 
+5) In the return continue, It will be working until it is posted to account 
+  
+   After return is added, Purcahse return details post to accounts should be gone 
+   then, 
+  there is a field called "Supplier name". When we type space, all details taken to be returned will be shown 
+  
+  Pending bill details - AMount which we need to give. 
+  
+  1(
+    Bill NO, Bill amount, paid amount, balance would be shown if we have anythign to pay them 
+
+
+    Payment voucher 
+    1) 
+
+
+Stock holders
+1) Supplier section - done 
+2) 
+
+Purcahse 
+1) 
+
+for the purcahse, if we need to buy 
+
+Recipet - The one who is not involved in trading. They should be able to give us. 
+
+
+PDC means the cheuqes we have. 
+
+Contra voucher 
+1) 
+
+
+Phase one 
+ Branch, Cashier, warehouse add/delete/edit 
+1) Save delet edit 
+2) Purcahse 
+3) Purcahse return 
+4) Post to account 
+5) Return post to account 
+6) payment section 
+
+
+
+Credit should be there only in the customer 
+
+Bad debt 
+When searched 
+customer name 
+customer address 
+amount 
+
+we would need to type payable amount 
+
+There should be a column in supplier called 'Bank details". 
+That bank details should be shown when the bank details is clicked and printed. 
+
+When creating employee 
+-> Advanced
+-> Basic salry 
+-> long term loan 
+-> invoice credit 
+-> basic salary 
+
+
+-> When creating in staff, customers will be saved as customers 
+-> 
+
+-> When employee create  
+  -> Name 
+  -> addres
+  -> NIC 
+  -> Working days 
+  -> Basic salary 
+  -> EPF (tick )
+  -> EPF basic salary if epf is ticked 
+  -> 
+  
+  -> Soft delete employee 
+  -> rejoin employee 
+  
+
+  Stock adjustment 
+  1) We should be able to search by barcode and item code 
+    then we can update. 
+
+  
+
+  New size edit 
+  1) When we click the edit, we should be able to edit and delete. That should be the seprate part. 
+
+
+
+Inventory 
+1) Item edit 
+2) New size 
+3) Edit size 
+4) Set re order level 
+5) Barcode label print 
+6) Barcode update 
+7) Item exchange / swap 
+8) Stock adjustment 
+9) Sale price update
+    -> When batch is disabled, Products in the particular batch is hidden 
+    -> then, we searhch by barcode or item code 
+    later, 
+    Code, barcode, main category, supplier name, cost price, minim price, discount, sale price, qty 
+   
+   -> In the bottom 
+      - Item code, item name, minimum price, sale price 
+
+
+10) Cost price update 
+    -> All enabled batch should be shown 
+    -> After changing cost price, It should ask if you want to change the sale price 
+    If yes, we need to go and change other wise, we should default the progress. 
+
+
+11) Barcode label print to enable / disabled 
+12) batch number enabled and disabled 
+13) Set re order level
+     -> Item code / Item / Category / Sub cat 1/ Su cat 2/ Color / Brand / Size / Qty / Re level order 
+     -> 
+ 
+
+
+Barcode label print 
+1) When we search, barcode should be disabled 
+2) Batch should be disabled and enabled after searching by barcode 
+ In case if the product comes to return product, final enabled product with batch will only accept it 
+3)  
+
+
+Quotation 
+1) we can save the quotation with customers 
+
+Damage item 
+-> Add damage 
+Code, barcode, item name, category, supplier name, cost price, sa price, size, quantity 
+
+-> There should be a button to "Add to damage". 
+
+Damage item recover 
+-> in the bottom 
+ Item code, item name, supplier name, description(name), damage qty, recover qty, Comment 
+
+Add warranty item. It doesn't correlate with warranty items  
+-> 1. Barcode / item code should be searched 
+  2) Display the products 
+     if the warranty exists, 
+  3) By default, particular supplier exsits. If we check the box for taking another supplier, 
+  
+ 
+ Stock 
+   Brand, Supplier vise, Item code 
+ 1) Item code, description, quantity, purcahse amount, minimum sales amount 
+
+
+changes in the bussiness
+
+   ->Bussiness 
+   -> Branches 
+   -> Warehouse 
+   -> Cashiers 
+   -> Store 
+   
+
+
+
+
+order check
+_______________ 
+1) Fully completed Stake holders 
+     
+2) Purcahse 
+
+3) Purcahse return
+
+4) Purcahse post to account 
+
+5) Purchase return post to account 
+
+6) Inventory 
+   
+7) Damage items 
+   -> Add damage items 
+   -> Add warranty items 
+
+8) Purcahsed items as a report.  
+
+10) All the keys should be working with enter 
+
+11) Model should be changed in purcahse 
+
+ 
+
+
+ Phase 2 
+  
+ Accounts 
+ POS panel 
+ PDC payment methods (All)

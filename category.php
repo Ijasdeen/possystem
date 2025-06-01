@@ -43,7 +43,7 @@ require_once('layouts/header.php')
                             <h5 class="modal-title text-white" id="addCategoryModalLabel">Add New Category</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form id="addCategoryFormsection">
+                        <form id="addCategoryFormsectionss">
                             <div class="modal-body">
                                 <div class="mb-3">
                                     <label for="categoryName" class="form-label">Category Name</label>
@@ -68,6 +68,9 @@ require_once('layouts/header.php')
             <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Home /</span> Categories</h4>
 
                <div class="my-3">
+                <input type="search" name="" placeholder="Search By name or category code" id="searchCategories" class="form-control">
+               </div>
+               <div class="my-3">
                 <button class="btn btn-primary btn-sm" data-bs-target="#addCategoryModal" data-bs-toggle="modal">
                 <i class="menu-icon tf-icons bx bx-plus"></i> ADD CATEGORY
                 </button>
@@ -82,8 +85,7 @@ require_once('layouts/header.php')
                          <th>#</th>
                         <th>Category Name</th>
                         <th>Category Code</th>
-                        
-                      </tr>
+                       </tr>
                     </thead>
                    <tbody id="showcategories">
 
@@ -113,3 +115,16 @@ require_once('layouts/footer.php');
 ?>
 
  <script src="js/category.js" defer></script>
+
+ <script>
+    $(document).ready(function(){
+        
+   $('#searchCategories').on('keyup', function() {
+        var value = $(this).val().toLowerCase();
+        $('#showcategories tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().includes(value));
+        });
+    });
+
+    }); 
+ </script>

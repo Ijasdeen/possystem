@@ -5,10 +5,7 @@ require_once('layouts/header.php')
 <div class="content-wrapper">
             <!-- Content -->
 
-            <!-- Edit Category Modal -->
-             
-
-            <!-- Add Category Modal -->
+           
             <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -59,6 +56,7 @@ require_once('layouts/header.php')
                     </div>
                 </div>
             </div>
+
 
  
             <div class="modal fade" id="editCategorymodal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
@@ -117,6 +115,10 @@ require_once('layouts/header.php')
 
 
             <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Home /</span> Brands</h4>
+            
+               <div class="my-3">
+                <input type="search" name="" placeholder="Search By name or category code" id="searchCategories" class="form-control">
+               </div>
 
                <div class="my-3">
                 <button class="btn btn-primary btn-sm" data-bs-target="#addCategoryModal" data-bs-toggle="modal">
@@ -160,3 +162,16 @@ require_once('layouts/footer.php');
 ?>
 
  <script src="js/brand.js" defer></script>
+ 
+ <script>
+    $(document).ready(function(){
+        
+   $('#searchCategories').on('keyup', function() {
+        var value = $(this).val().toLowerCase();
+        $('#showbrandssection tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().includes(value));
+        });
+    });
+
+    }); 
+ </script>

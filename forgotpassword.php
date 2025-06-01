@@ -1,13 +1,6 @@
-<?php
-require_once('connection.php'); 
-session_start(); 
-if (isset($_SESSION['admin_name'])) {
-    echo "<script>window.location.href='index.php';</script>"; 
-    exit;
-}
-?>
-
 <!DOCTYPE html>
+
+ 
 <html
   lang="en"
   class="light-style customizer-hide"
@@ -23,12 +16,12 @@ if (isset($_SESSION['admin_name'])) {
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title>Login to admin</title>
+    <title>Forgot Password</title>
 
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="assets/img/favicon/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="../assets/img/favicon/favicon.ico" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -36,12 +29,9 @@ if (isset($_SESSION['admin_name'])) {
     <link
       href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
       rel="stylesheet"
-    />
-
-    <!-- Icons. Uncomment required icon fonts -->
+    /> 
     <link rel="stylesheet" href="assets/vendor/fonts/boxicons.css" />
-
-    <!-- Core CSS -->
+ 
     <link rel="stylesheet" href="assets/vendor/css/core.css" class="template-customizer-core-css" />
     <link rel="stylesheet" href="assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
     <link rel="stylesheet" href="assets/css/demo.css" />
@@ -65,8 +55,8 @@ if (isset($_SESSION['admin_name'])) {
 
     <div class="container-xxl">
       <div class="authentication-wrapper authentication-basic container-p-y">
-        <div class="authentication-inner">
-          <!-- Register -->
+        <div class="authentication-inner py-4">
+          <!-- Forgot Password -->
           <div class="card">
             <div class="card-body">
               <!-- Logo -->
@@ -127,65 +117,44 @@ if (isset($_SESSION['admin_name'])) {
                       </g>
                     </svg>
                   </span>
-                  <span class="app-brand-text demo text-body fw-bolder">Main Admin panel</span>
+                  <span class="app-brand-text demo text-body fw-bolder">Posspeed</span>
                 </a>
               </div>
               <!-- /Logo -->
-              <h4 class="mb-2">Welcome to Main admin panel! 👋</h4>
-              <p class="mb-4">Please sign-in to your account and start the adventure</p>
-
+              <h4 class="mb-2">Forgot Password? 🔒</h4>
               <form id="formAuthentication" class="mb-3"  method="POST">
                 <div class="mb-3">
-                  <label for="email" class="form-label">Mobile Number</label>
+                  <label for="mobile" class="form-label">Mobile Number</label>
                   <input
-                    type="tel"
+                    type="text"
                     class="form-control"
-                    id="mobileNumber"
-                    name="email-username"
-                    placeholder="Enter your mobile number"
+                    id="mobile"
+                    name="mobile"
+                    placeholder="Mobile number"
                     autofocus
                   />
                 </div>
-                <div class="mb-3 form-password-toggle">
-                  <div class="d-flex justify-content-between">
-                    <label class="form-label" for="password">Password</label>
-                    <a href="forgotpassword.php">
-                      <small>Forgot Password?</small>
-                    </a>
-                  </div>
-                  <div class="input-group input-group-merge">
-                    <input
-                      type="password"
-                      id="password"
-                      class="form-control"
-                      name="password"
-                      placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                      aria-describedby="password"
-                    />
-                    <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                  </div>
-                </div>
-               
-                <div class="mb-3">
-                  <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
-                </div>
+                <button class="btn btn-primary d-grid w-100">Send OTP</button>
               </form>
-
-               
+              <div class="text-center">
+                <a href="login.php" class="d-flex align-items-center justify-content-center">
+                  <i class="bx bx-chevron-left scaleX-n1-rtl bx-sm"></i>
+                  Back to login
+                </a>
+              </div>
             </div>
           </div>
-        
+          <!-- /Forgot Password -->
         </div>
       </div>
     </div>
 
 
-
-    <div class="modal fade" id="basicModal" tabindex="-1" aria-hidden="true">
+        <div class="modal fade" id="basicModal" tabindex="-1" aria-hidden="true">
                           <div class="modal-dialog" role="document">
                             <div class="modal-content">
                               <div class="modal-header bg-dark">
-                                <h5 class="modal-title text-white" id="exampleModalLabel1">Quick login by Card</h5>
+                                <h5 class="modal-title text-white" id="exampleModalLabel1">Enter OTP</h5>
                                 <button
                                   type="button"
                                   class="btn-close"
@@ -194,13 +163,29 @@ if (isset($_SESSION['admin_name'])) {
                                 ></button>
                               </div>
                               <div class="modal-body">
-                                <div class="row">
+                               <form method="POST" id="setnewpassword">
+                                 <div class="row">
                                   <div class="col mb-3">
-                                    <label for="nameBasic" class="form-label">Scan</label>
-                                    <input type="password" id="nameBasicsection" class="form-control" placeholder="Scan your card for quick login" />
+                                    <label for="nameBasic" class="form-label">OTP</label>
+                                    <input type="tel" required id="otptypedmessage" class="form-control" placeholder="Your OTP here" />
                                   </div>
-                                </div>
-                            
+
+                                   <div class="col mb-3">
+                                    <label for="nameBasic" class="form-label">New password</label>
+                                    <input type="password" required id="newpassword" class="form-control" placeholder="New Password" />
+                                  </div>
+
+                                   <div class="col mb-3">
+                                    <label for="nameBasic" class="form-label">Confirm Passsword</label>
+                                    <input type="password" required id="confirmpassword" class="form-control" placeholder="Confirm Password" />
+                                  </div>
+                                 </div>
+
+                                 <div class="my-2">
+                                    <button class="btn btn-primary btn-sm">RESET PASSWORD</button>
+                                 </div>
+                               </form>
+                               
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
@@ -214,15 +199,12 @@ if (isset($_SESSION['admin_name'])) {
                       </div>
                     </div>
 
- 
+
+
+    <!-- / Content -->
+
     <div class="buy-now">
-      <a
-        href="javascript:void(0);"
-        class="btn btn-primary btn-buy-now"
-        data-bs-toggle="modal"
-        data-bs-target="#basicModal"
-        >Login with ID card</a
-      >
+      
     </div>
 
     <!-- Core JS -->
@@ -240,128 +222,122 @@ if (isset($_SESSION['admin_name'])) {
     <!-- Main JS -->
     <script src="assets/js/main.js"></script>
 
- 
-
-    
- 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-    
+    <!-- Page JS -->
 
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
-
+ 
     <script>
         $(document).ready(function(){
 
-            $('#nameBasicsection').on('keypress', function(e) {
-                if (e.which === 13) { // Enter key pressed
-                    e.preventDefault(); // Prevent default action
-                    var cardInput = $.trim($(this).val());
+     $('#setnewpassword').on('submit', function(e) {
+    e.preventDefault();
 
-                    if (cardInput == '') {
-                        toastr.error("Please scan your card for quick login");
-                        $(this).css('border', '2px solid red').focus();
-                        return false;
+    const otpTyped = $('#otptypedmessage').val().trim();
+    const storedOtp = sessionStorage.getItem('otp');
+    const newPassword = $('#newpassword').val().trim();
+    const confirmPassword = $('#confirmpassword').val().trim();
+
+    // Validate OTP
+    if (otpTyped !== storedOtp) {
+        alert("OTP is incorrect.");
+        $('#otptypedmessage').css('border', '2px solid red').focus();
+        return;
+    }
+
+    // Validate Password Match
+    if (newPassword !== confirmPassword) {
+        alert("Confirm password does not match.");
+        $('#confirmpassword').css('border', '2px solid red').focus();
+        return;
+    }
+
+    // Optional: Disable submit button to prevent multiple clicks
+    const $submitBtn = $(this).find('button[type="submit"]');
+    $submitBtn.prop('disabled', true);
+
+    // Send AJAX request
+    $.ajax({
+        url: 'action.php',
+        method: 'POST',
+        data: {
+            confirmpassword: confirmPassword,
+            resetpassword: 55
+        },
+        success: function(response) {
+            if (response == '1') {
+                 sessionStorage.setItem('otp',null); 
+                alert("Password changed successfully.");
+                window.location.href = "login.php";
+            } else {
+                alert(response);
+                $submitBtn.prop('disabled', false); // Re-enable on error
+            }
+        },
+        error: function(xhr) {
+            alert("Something went wrong. Please try again.");
+            $submitBtn.prop('disabled', false);
+        }
+    });
+});
+
+
+            $('#formAuthentication').on('submit',function(e){
+                    e.preventDefault(); 
+                    let mobile= $('#mobile').val(); 
+                    if(mobile=='' || !mobile){
+                        alert("Please enter the mobile number"); 
+                        return false; 
                     }
 
                     $.ajax({
-                        url: 'action.php',
-                        type: 'POST',
-                        data: {
-                            cardInput: cardInput,
-                            quickLogin: 2323
+                        url:'action.php', 
+                        method:'POST',
+                        data:{
+                            sendOTP:55,
+                            mobile:mobile
                         },
-                        success: function(response) {
-                            if (response == 1) {
-                                window.location.reload();
-                            } else {
-                                toastr.error('Invalid card. Please try again.');
-                                $(this).css('border', '2px solid red').focus(); // Keep focus on the input
+                        success:function(data){
+                            if(data==12){
+                                alert("Invalid Mobile number");
+                                $('#mobile').css('border','2px solid red').focus();  
                                 return false; 
                             }
-                        },
-                        error: function() {
-                            toastr.error('An error occurred. Please try again later.');
-                            $(this).css('border', '2px solid red').focus(); // Keep focus on the input
-                            return false;
-                        }
-                    });
-                }
-            });
+                            else {
+                                $('#basicModal').modal('show'); 
+                            sessionStorage.setItem('otp',data); 
+                                alert("OTP has been sent successfully");
 
-
-
-
-
-
-            $('input').on('keypress', function(e) {
-                if (e.which === 13) { // Enter key pressed
-                    e.preventDefault(); // Prevent form submission
-                    var inputs = $('input');
-                    var index = inputs.index(this);
-                    if (index + 1 < inputs.length) {
-                        inputs.eq(index + 1).focus(); // Focus on the next input
-                    } else {
-                        $('#formAuthentication').submit(); // Submit the form if no input is left
-                    }
-                }
-            });
-
-
-                $('#formAuthentication').on('submit', function(e) {
-                    e.preventDefault(); // Prevent the default form submission
-                    var mobileNumber = $('#mobileNumber').val();
-                    var password = $('#password').val();
-
-                    if(mobileNumber==''){
-                        toastr.error("Please enter the mobile number"); 
-                        $('#mobileNumber').css('border','2px solid red').focus(); 
-                        return false; 
-                    }
-                    if(password==''){
-                        toastr.error("Please enter the password"); 
-                        $('#password').css('border','2px solid red').focus(); 
-                        return false; 
-                    }
-
-
-                    $.ajax({
-                        url: 'action.php',
-                        type: 'POST',
-                        data: {
-                            mobileNumber: mobileNumber,
-                            password: password,
-                            loginnow:55
-                        },
-                        success: function(response) {
-                            console.clear(); 
-                            console.log(response);
-                            if (response == 1) {
-                               window.location.reload(); 
-                            } else {
-                                alert('Invalid login credentials. Please try again.');
                             }
                         },
-                       error: function(xhr, status, error) {
-                console.error("AJAX Error Details:");
-                console.error("Status: " + status);
-                console.error("HTTP Code: " + xhr.status);
-                console.error("Response Text: " + xhr.responseText);
-                console.error("Error: " + error);
+                        error:function(err){
+                            alert("Error found in" + err); 
+                        }
+                    })
 
-    alert('An error occurred:\n' + xhr.status + ' - ' + error + '\nPlease check the console for details.');
-}
+            }); 
+            
+        });
+    </script>
 
-                    });
-                   
-                });
+    <script>
+        $(document).ready(function() {
+    $('#setnewpassword input').on('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Prevent form submission
 
-                
-        }); 
+            let inputs = $('#setnewpassword input:visible');
+            let index = inputs.index(this);
+
+            if (index < inputs.length - 1) {
+                inputs.eq(index + 1).focus(); // Move to next input
+            } else {
+                $('#setnewpassword').submit(); // Submit form on last input
+            }
+        }
+    });
+});
+
     </script>
 
   </body>

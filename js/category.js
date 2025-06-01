@@ -139,57 +139,53 @@ $(document).ready(function() {
 
         
     });
+ 
 
-    $('#addCategoryFormsection').on('submit','click',function(e){
-        e.preventDefault(); 
-        let categoryName = $('#categoryName').val();
-        let categoryCode = $('#categoryCode').val();
-        if(categoryName==''){
-            toastr.error("Please enter the category name");
-             $('#categoryName').css('border','2px solid red').focus(); 
-             return false; 
-        }
+    $('#addCategoryFormsectionss').on('submit', function(e) {
+    e.preventDefault(); 
+    let categoryName = $('#categoryName').val();
+    let categoryCode = $('#categoryCode').val();
 
-     
-        $.ajax({
-            url: 'action.php',
-            type: 'POST',
-            data: {
-                categoryName: categoryName,
-                categoryCode: categoryCode, 
-                saveAddCategoryform:55
-            },
-            success: function(data) {
-                if(data==1){
-                    $('#addCategoryForm')[0].reset(); // Reset the form
-                    $('#categoryName').focus(); 
-                    toastr.success("Saved successfully"); 
-                   showOffCategories();
-                   
-                }
-              else if(data==12){
-                    toastr.info("Category with same name already exists"); 
-                $('#categoryName').css('border','2px solid red').focus(); 
-                    return false; 
-                 }
-                 else {
-                    toastr.info(data); 
-                 }
-               
-                 
-            },
-            error: function() {
-                // Show error toast
-                Toastify({
-                    text: "An error occurred while adding the category.",
-                    duration: 3000,
-                    gravity: "top",
-                    position: "right",
-                    backgroundColor: "#F44336"
-                }).showToast();
+    if (categoryName === '') {
+        toastr.error("Please enter the category name");
+        $('#categoryName').css('border', '2px solid red').focus(); 
+        return false; 
+    }
+
+
+    $.ajax({
+        url: 'action.php',
+        type: 'POST',
+        data: {
+            categoryName: categoryName,
+            categoryCode: categoryCode, 
+            saveAddCategoryform: 55
+        },
+        success: function(data) {
+            if (data == 1) {
+                $('#addCategoryFormsectionss')[0].reset(); // Reset the form
+                $('#categoryName').focus(); 
+                toastr.success("Saved successfully"); 
+                showOffCategories();
+            } else if (data == 12) {
+                toastr.info("Category with same name already exists"); 
+                $('#categoryName').css('border', '2px solid red').focus(); 
+            } else {
+                toastr.info(data); 
             }
-        });
-    }); 
+        },
+        error: function() {
+            Toastify({
+                text: "An error occurred while adding the category.",
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                backgroundColor: "#F44336"
+            }).showToast();
+        }
+    });
+});
+
  
 
 

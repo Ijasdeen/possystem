@@ -3,6 +3,145 @@ session_start();
 
 require_once('connection.php'); 
 
+
+    function getAccessToken($username, $password) {
+        $url = "https://e-sms.dialog.lk/api/v1/login/"; // Confirm the endpoint
+        $data = json_encode([
+            "username" => $username,
+            "password" => $password
+        ]);
+    
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json'
+        ]);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    
+        $response = curl_exec($ch);
+        $httpStatusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    
+        if ($response === false) {
+            die("cURL error: " . curl_error($ch));
+        }
+    
+        if ($httpStatusCode !== 200) {
+            die("Unexpected HTTP response code: $httpStatusCode. Response: $response");
+        }
+    
+        curl_close($ch);
+    
+        $result = json_decode($response, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            die("JSON Decode Error: " . json_last_error_msg());
+        }
+    
+        if (isset($result['status']) && $result['status'] === 'success') {
+            return $result['token'];
+        } else {
+            $comment = $result['comment'] ?? 'No comment available';
+            die("Error: " . $comment);
+        }
+    }
+    
+    function generateOTP() {
+        return rand(1000, 9999); // Generate a random number between 1000 and 9999
+    }
+    
+     
+    
+    
+    function sendSMS($token, $message, $numbers, $sourceAddress, $transactionId, $paymentMethod = 0) {
+        $url = "https://e-sms.dialog.lk/api/v2/sms/";
+        $msisdn = array_map(fn($num) => ["mobile" => $num], $numbers);
+        $data = json_encode([
+            "msisdn" => $msisdn,
+            "message" => $message,
+            "sourceAddress" => $sourceAddress,
+            "transaction_id" => $transactionId,
+            "payment_method" => $paymentMethod
+        ]);
+    
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Content-Type: application/json",
+            "Authorization: Bearer " . $token
+        ]);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    
+        $response = curl_exec($ch);
+        $httpStatusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    
+        if ($response === false) {
+            die("cURL error: " . curl_error($ch));
+        }
+    
+        if ($httpStatusCode !== 200) {
+            die("Unexpected HTTP response code: $httpStatusCode. Response: $response");
+        }
+    
+        curl_close($ch);
+    
+        $result = json_decode($response, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            die("JSON Decode Error: " . json_last_error_msg());
+        }
+    
+        return $result;
+    }
+
+    
+    function sendlineupssms($mobile, $message) {
+        $username = "kingsparrowuser";
+        $password = "Nowfar@112233";
+        $numbers = [$mobile];
+        $sourceAddress = "Sparrow";
+   
+    
+        $transactionId = strval(random_int(100000000000000, 999999999999999));
+          
+    
+        $token = getAccessToken($username, $password);
+        if (!$token) {
+            die("Failed to generate access token.");
+        }
+    
+        return sendSMS($token, $message, $numbers, $sourceAddress, $transactionId);
+    }
+    
+      if(isset($_POST['sendOTP'])){
+         $otp = generateOTP(); 
+         $mobile = $_POST['mobile']; 
+         
+         $query ="SELECT id from `admin` where mobilenumber='$mobile'";
+         $result = mysqli_query($connection,$query); 
+         if($result){
+                if(mysqli_num_rowS($result) >0) {
+                    $message = "Dear Admin. Your otp for main login is ".$otp."
+                    ~Thank you~
+                    "; 
+                    sendlineupssms($mobile,$message); 
+                    echo $otp; 
+                }
+                else {
+                    echo 12; 
+                }
+         } 
+         else {
+            echo mysqli_error($connection); 
+         }
+         $message = "Your OTP NO : ".$otp;
+         
+      }  
+
+      if(isset($_POST['resetpassword'])){
+        $confirmpassword = $_POST['confirmpassword']; 
+        $query = "UPDATE `admin` SET `password`='$confirmpassword'";
+        echo mysqli_query($connection,$query);
+      }
  
  if (isset($_POST['saveColor'])) {
     $name = ucwords(trim($_POST['name'])); // Capitalize first letter of each word
@@ -40,6 +179,7 @@ require_once('connection.php');
 }
 
 
+
 if(isset($_POST['updatecolor'])){
     $id = intval($_POST['id']);
     $name = isset($_POST['name']) ? ucwords(trim($_POST['name'])) : '';
@@ -67,12 +207,12 @@ if(isset($_POST['updatecolor'])){
     
 }
 
-
+ 
 if (isset($_POST['action']) && $_POST['action'] === 'update_brand') {
     $id = intval($_POST['id']);
     $name = isset($_POST['name']) ? ucwords(trim($_POST['name'])) : '';
 
-    // Check if brand name exists for another id to prevent duplicates
+ 
     $check = $connection->prepare("SELECT id FROM brand WHERE name = ? AND id != ?");
     $check->bind_param("si", $name, $id);
     $check->execute();
@@ -94,6 +234,8 @@ if (isset($_POST['action']) && $_POST['action'] === 'update_brand') {
     exit;
 
 }
+
+
 
 if (isset($_POST['deleteBranch'])) {
     $id = $_POST['id'] ?? null;
@@ -137,17 +279,74 @@ if (isset($_POST['deleteWarehouse'])) {
 }
  if (isset($_POST['deleteCashiersection'])) {
     $myid = $_POST['myid'];
+    $query = "DELETE FROM cashiers where cashiers.id='$myid'";
+    $result = mysqli_query($connection,$query); 
+    echo $result ? 1 : 0; 
 
-    // Use a prepared statement to avoid SQL injection
-    $stmt = $connection->prepare("DELETE FROM cashiers WHERE id = ?");
-    $stmt->bind_param("i", $myid); // "i" denotes integer type
-    $stmt->execute();
-
-    echo ($stmt->affected_rows > 0) ? 1 : 0;
-
-    $stmt->close();
 }
 
+ if (isset($_POST['deleteStore'])) {
+    $myid = $_POST['myid'];
+    $query = "DELETE FROM store where id='$myid'";
+    $result = mysqli_query($connection,$query); 
+    echo $result ? 1 : 0; 
+
+}
+
+
+
+
+if (isset($_POST['showoffStore'])) {
+    $query = "SELECT * FROM store";
+    $result = mysqli_query($connection, $query); 
+    $index = 0;
+
+    if ($result) {
+        if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                ?>
+                <tr>
+                    <td>
+                        <?php echo ++$index; ?>
+                    </td>
+                    <td>
+                        <?php echo $row['name']; ?>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton<?php echo $row['id']; ?>" data-bs-toggle="dropdown" aria-expanded="false">
+                            Choose
+                          </button>
+                          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<?php echo $row['id']; ?>">
+                            <li>
+                                <a class="dropdown-item editStoreSectionlineup" myid="<?php echo $row['id']; ?>" name="<?php echo $row['name']; ?>">
+                                    <i class="menu-icon tf-icons bx bx-edit"></i>&nbsp;Edit
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item deleteStore" myid="<?php echo $row['id']; ?>" href="#">
+                                    <i class="menu-icon tf-icons bx bx-trash"></i>&nbsp;Delete
+                                </a>
+                            </li>
+                          </ul>
+                        </div>
+                    </td>
+                </tr>
+                <?php
+            }
+        } else {
+            ?>
+            <tr>
+                <td colspan="3">
+                    <span class="text text-danger fw-bold">No store found</span>
+                </td>
+            </tr>
+            <?php
+        }
+    } else {
+        echo mysqli_error($connection); 
+    }
+}
 
 
 
@@ -174,7 +373,7 @@ if (isset($_POST['deleteWarehouse'])) {
   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
     <li><a class="dropdown-item editCashiersection" myid="<?php echo $row['id']?>" name="<?php echo $row['name']?>" href="#"><i class="menu-icon tf-icons bx bx-edit"></i>&nbsp;Edit</a></li>
     <li><a class="dropdown-item deleteCashier" myid="<?php echo $row['id']?>" href="#"><i class="menu-icon tf-icons bx bx-trash"></i>&nbsp;Delete</a></li>
- 
+                
   </ul>
 </div>
 
@@ -198,10 +397,691 @@ if (isset($_POST['deleteWarehouse'])) {
     }
  }
 
+ if(isset($_POST['showoffSavedItems'])){
+    $myid = $_POST['myid'] ?? null;
+    if (!$myid) {
+        echo "0"; // No ID provided
+        exit;
+    }
+
+    $selectedid = 0; 
+    $query = "SELECT id from purcahse where purchaseInvoiceNo='$myid'"; 
+    $result = mysqli_query($connection, $query);
+    if (!$result) {
+        echo mysqli_error($connection); // Log error
+        exit;
+    }
+    if(mysqli_num_rows($result) >0) {
+        $row = mysqli_fetch_assoc($result);
+        $selectedid = $row['id'];
+    }
+
+    $squery = "SELECT pr_items.id, pr_items.barcode, pr_items.item_code, pr_items.invoice_item_name, pr_items.item_name, pr_items.tag_name, 
+              pr_items.category_id, pr_items.subcategory1_id, pr_items.subcategory2_id, pr_items.subcategory3_id, 
+              pr_items.color_id, pr_items.brand_id, pr_items.unit_id, pr_items.quantity, 
+              pr_items.cost_price, pr_items.retail_mini_price, pr_items.retail_price, 
+              pr_items.retail_discount, pr_items.retail_discount_percent, pr_items.sale_price
+              FROM purcahse 
+              JOIN pr_items ON purcahse.id = pr_items.purchase_id_fk
+              WHERE purcahse.id = '$selectedid'";
+    $sresult = mysqli_query($connection, $squery);
+    if (!$sresult) {
+        echo mysqli_error($connection); // Log error
+        exit;
+    }
+    if ($sresult && mysqli_num_rows($sresult) > 0) {
+        $index = 0;
+        while ($row = mysqli_fetch_assoc($sresult)) {
+            $lineTotal = $row['quantity'] * $row['cost_price'];
+            ?>
+            <tr>
+                <td><?php echo htmlspecialchars($row['item_code']); ?></td>
+                <td><?php echo htmlspecialchars($row['barcode']); ?></td>
+                <td><?php echo htmlspecialchars($row['batch_id']); ?></td>
+                <td><?php echo htmlspecialchars($row['quantity']); ?></td>
+                <td><?php echo htmlspecialchars($row['cost_price']); ?></td>
+                <td><?php echo htmlspecialchars($row['retail_mini_price']); ?></td>
+                <td><?php echo htmlspecialchars($row['retail_discount']); ?></td>
+                <td><?php echo htmlspecialchars($row['sale_price']); ?></td>
+                <td><?php echo number_format($lineTotal, 2); ?></td>
+            </tr>
+            <?php
+        }
+    } else {
+        ?>
+        <tr>
+            <td colspan="10" class="text-danger fw-bold">No items found</td>
+        </tr>
+        <?php
+    }
+
+
+
+ }
+
+
+  if (isset($_POST['showOffSuppliers'])) {
+    $query = "SELECT id, supplier_name FROM supplier";
+    if ($result = mysqli_query($connection, $query)) {
+        if (mysqli_num_rows($result) > 0) {
+            $options = '<option value="">--Choose one--</option>';
+            while ($row = mysqli_fetch_assoc($result)) {
+                $id = htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8');
+                $name = htmlspecialchars($row['supplier_name'], ENT_QUOTES, 'UTF-8');
+                $options .= "<option value=\"$id\">$name</option>";
+            }
+            echo $options;
+        } else {
+            echo '<option value="">-- No Supplier found --</option>';
+        }
+    } else {
+        error_log(mysqli_error($connection)); // Better to log errors in production
+        echo '<option value="">-- Error fetching suppliers --</option>';
+    }
+}
+
+if(isset($_POST['showoffColors'])){
+    $query = "SELECT * FROM color";
+    $result = mysqli_query($connection,$query); 
+    if($result){
+          if(mysqli_num_rows($result) >0) {
+            ?>
+            <option value="">--Choose one--</option>
+            <?php
+           
+            while($row = mysqli_fetch_assoc($result)){
+                ?>
+                <option value="<?php echo $row['id']?>"><?php echo $row['name']?></option>
+                <?php
+            }
+
+          }
+          else {
+            ?>
+            <option value="">--No data found--</option>
+            <?php
+
+          }
+    } 
+    else {
+        echo mysqli_error($connection); 
+    }
+}
+
+
+
+if(isset($_POST['showoffBrands'])){
+    $query = "SELECT * FROM brand";
+    $result = mysqli_query($connection,$query); 
+    if($result){
+          if(mysqli_num_rows($result) >0) {
+            ?>
+            <option value="">--Choose one--</option>
+            <?php
+           
+            while($row = mysqli_fetch_assoc($result)){
+                ?>
+                <option value="<?php echo $row['id']?>"><?php echo $row['name']?></option>
+                <?php
+            }
+
+          }
+          else {
+            ?>
+            <option value="">--No data found--</option>
+            <?php
+
+          }
+    } 
+    else {
+        echo mysqli_error($connection); 
+    }
+}
+
+if(isset($_POST['showoffsubcategory2'])){
+    $subcategory1Id = $_POST['subcategory1Id']; 
+    $query = "SELECT * FROM subcategory2 where subcategory1_id_fk='$subcategory1Id'";
+
+    $result = mysqli_query($connection,$query); 
+    if($result){
+          if(mysqli_num_rows($result) >0) {
+            ?>
+            <option value="">--Choose one--</option>
+            <?php
+           
+            while($row = mysqli_fetch_assoc($result)){
+                ?>
+                <option value="<?php echo $row['id']?>"><?php echo $row['subcategory2_name']?></option>
+                <?php
+            }
+
+          }
+          else {
+            ?>
+            <option value="">--No data found--</option>
+            <?php
+
+          }
+    } 
+    else {
+        echo mysqli_error($connection); 
+    }
+}
+
+if(isset($_POST['getLastPurchaseId'])){
+    $query = "SELECT id FROM purcahse ORDER BY id DESC LIMIT 1";
+    $result = mysqli_query($connection, $query);
+    
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        echo $row['id'] + 1;
+    } else {
+        echo "0"; // No purchases found
+    }
+}
+
+
+
+if(isset($_POST['showoffsubcategory322'])){
+    $subcategory2Id = $_POST['subcategory2Id']; 
+    $query = "SELECT * FROM subcategory3 where subcategory2_id_fk='$subcategory2Id'";
+    
+
+    $result = mysqli_query($connection,$query); 
+    if($result){
+          if(mysqli_num_rows($result) >0) {
+            ?>
+            <option value="">--Choose one--</option>
+            <?php
+           
+            while($row = mysqli_fetch_assoc($result)){
+                ?>
+                <option value="<?php echo $row['id']?>"><?php echo $row['subcategory3_name']?></option>
+                <?php
+            }
+
+          }
+          else {
+            ?>
+            <option value="">--No data found--</option>
+            <?php
+
+          }
+    } 
+    else {
+        echo mysqli_error($connection); 
+    }
+}
+
+if(isset($_POST['showoffsubcategory1'])){
+    $categoryId = $_POST['categoryId']; 
+    $query = "SELECT * FROM subcategory1 where category_id_fk='$categoryId'";
+
+    $result = mysqli_query($connection,$query); 
+    if($result){
+          if(mysqli_num_rows($result) >0) {
+            ?>
+            <option value="">--Choose one--</option>
+            <?php
+           
+            while($row = mysqli_fetch_assoc($result)){
+                ?>
+                <option value="<?php echo $row['id']?>"><?php echo $row['subcategoryname']?></option>
+                <?php
+            }
+
+          }
+          else {
+            ?>
+            <option value="">--No data found--</option>
+            <?php
+
+          }
+    } 
+    else {
+        echo mysqli_error($connection); 
+    }
+}
+
+
+if(isset($_POST['showoffcategory'])){
+    $query = "SELECT * FROM categories";
+    $result = mysqli_query($connection,$query); 
+    if($result){
+          if(mysqli_num_rows($result) >0) {
+            ?>
+            <option value="">--Choose one--</option>
+            <?php
+           
+            while($row = mysqli_fetch_assoc($result)){
+                ?>
+                <option value="<?php echo $row['id']?>"><?php echo $row['name']?></option>
+                <?php
+            }
+
+          }
+          else {
+            ?>
+            <option value="">--No data found--</option>
+            <?php
+
+          }
+    } 
+    else {
+        echo mysqli_error($connection); 
+    }
+}
+ 
+
+if (isset($_POST['savePurchase'])) {
+ 
+    if (isset($_POST['savePurchase'])) {
+    // Collect and sanitize input values
+    $barcode = $_POST['barcode'] ?? '';
+    $itemCode = $_POST['itemCode'] ?? '';
+    $invoiceItemName = $_POST['invoiceItemName'] ?? '';
+    $itemName = $_POST['itemName'] ?? '';
+    $tagName = $_POST['tagName'] ?? '';
+    $category = intval($_POST['category'] ?? 0);
+    $subcategory1 = intval($_POST['subcategory1'] ?? 0);
+    $subCategory2 = intval($_POST['subCategory2'] ?? 0);
+    $subcategory3 = intval($_POST['subcategory3'] ?? 0);
+    $color = intval($_POST['color'] ?? 0);
+    $brand = intval($_POST['brand'] ?? 0);
+    $unit = intval($_POST['unit'] ?? 0);
+    $quantity = floatval($_POST['quantity'] ?? 0);
+    $costPrice = floatval($_POST['costPrice'] ?? 0);
+    $retailMiniPrice = floatval($_POST['retailMiniPrice'] ?? 0);
+    $retailPrice = floatval($_POST['retailPrice'] ?? 0);
+    $retailDiscount = floatval($_POST['retailDiscount'] ?? 0);
+    $retailDiscountPercent = floatval($_POST['retailDiscountPercent'] ?? 0);
+    $salePrice = floatval($_POST['salePrice'] ?? 0);
+    $purchaseInvoiceNo222 = $_POST['purchaseInvoiceNo'] ?? '';
+    $supplier_date = $_POST['supplierInvoiceDate'] ?? '';
+    $tagname = $_POST['tagNames'] ?? '';
+    $supplierInvoiceNo = $_POST['supplierInvoiceNumber'] ?? '';
+    $purcahseplace = 'warehouse';
+    $place_id_fk = 1;
+    $batch_id = 1;
+    $supplier_id_fk = intval($_POST['chooseSupplierDropdown'] ?? 0);
+    $lastPrItemId = 0;
+
+    date_default_timezone_set('Asia/Kolkata');
+$kolkataDateTime = date('Y-m-d H:i:s'); 
+
+    // Insert into purcahse table
+    $sql = "INSERT INTO purcahse (supplier_date, tagname, supplierInvoiceNo, purchaseInvoiceNo, purcahseplace, place_id_fk, batch_id, supplier_id_fk,purcahsed_datetime)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)";
+
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("ssssssiis", $supplier_date, $tagname, $supplierInvoiceNo, $purchaseInvoiceNo222, $purcahseplace, $place_id_fk, $batch_id, $supplier_id_fk,$kolkataDateTime);
+
+    if (!$stmt->execute()) {
+        echo "Error (purchase insert): " . $stmt->error;
+        exit;
+    }
+    $stmt->close();
+
+    // Get the inserted purchase ID
+    $purchaseId = $connection->insert_id;
+
+    // Insert into pr_items table
+    $sqlItems = "INSERT INTO pr_items (
+        purchase_id_fk, barcode, item_code, invoice_item_name, item_name, tag_name,
+        category_id, subcategory1_id, subcategory2_id, subcategory3_id,
+        color_id, brand_id, unit_id, quantity, cost_price, retail_mini_price,
+        retail_price, retail_discount, retail_discount_percent, sale_price
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    $stmtItems = $connection->prepare($sqlItems);
+
+    $stmtItems->bind_param(
+        "isssssiiiiiiiddddddd",
+        $purchaseId,
+        $barcode,
+        $itemCode,
+        $invoiceItemName,
+        $itemName,
+        $tagName,
+        $category,
+        $subcategory1,
+        $subCategory2,
+        $subcategory3,
+        $color,
+        $brand,
+        $unit,
+        $quantity,
+        $costPrice,
+        $retailMiniPrice,
+        $retailPrice,
+        $retailDiscount,
+        $retailDiscountPercent,
+        $salePrice
+    );
+
+    if (!$stmtItems->execute()) {
+        echo "Error (pr_items insert): " . $stmtItems->error;
+        exit;
+    }
+
+    $lastPrItemId = $stmtItems->insert_id;
+    $stmtItems->close();
+
+    echo $lastPrItemId;
+}
+
+
+}
+
+
+
+if(isset($_POST['saveSizes'])){
+$saveSizes = $_POST['saveSizes'] ?? null;
+$myid = $_POST['myid'] ?? null;
+$sizesJson = $_POST['sizes'] ?? null;
+
+// Decode sizes JSON string into an array
+$sizes = json_decode($sizesJson, true);
+
+// Check if data is valid
+if (is_array($sizes) && !empty($myid)) {
+    foreach ($sizes as $row) {
+        $sizeName = $row['sizeName'] ?? NULL;
+        $qty = $row['warehouse'] ?? NULL; // Assuming "warehouse" holds quantity value
+     
+        $stmt = $connection->prepare("INSERT INTO sizes (pr_id_fk, size, qty) VALUES (?, ?, ?)");
+        $stmt->bind_param("iss", $myid, $sizeName, $qty);
+        $stmt->execute();
+    }
+
+    echo "Sizes saved successfully.";
+} else {
+    echo "Invalid data received.";
+}
+
+
+}
+ 
+ if (isset($_POST['changepassword'])) {
+    $oldpassword = mysqli_real_escape_string($connection, $_POST['oldpassword']);
+    $confirmpassword = mysqli_real_escape_string($connection, $_POST['confirmpassword']);
+
+    // Check if admin with old password exists
+    $query = "SELECT id FROM `admin` WHERE password = '$oldpassword' LIMIT 1";
+    $result = mysqli_query($connection, $query);
+
+    if ($result) {
+        if (mysqli_num_rows($result) > 0) {
+            $row = mysqli_fetch_assoc($result);
+            $adminId = $row['id'];
+
+            // Update password for that admin
+            $updateQuery = "UPDATE `admin` SET password = '$confirmpassword' WHERE id = '$adminId'";
+            $updateResult = mysqli_query($connection, $updateQuery);
+
+            echo $updateResult ? 1 : 0; // 1 = success, 0 = update failed
+        } else {
+            echo 12; // Old password incorrect
+        }
+    } else {
+        echo "Query Error: " . mysqli_error($connection);
+    }
+}
+
+
+if(isset($_POST['showoffUnits'])){
+    $query = "SELECT * FROM unit";
+    $result = mysqli_query($connection,$query); 
+    if($result){
+          if(mysqli_num_rows($result) >0) {
+            ?>
+            <option value="">--Choose one--</option>
+            <?php
+           
+            while($row = mysqli_fetch_assoc($result)){
+                ?>
+                <option value="<?php echo $row['id']?>"><?php echo $row['name']?></option>
+                <?php
+            }
+
+          }
+          else {
+            ?>
+            <option value="">--No data found--</option>
+            <?php
+
+          }
+    } 
+    else {
+        echo mysqli_error($connection); 
+    }
+}
+
+
+ if(isset($_POST['assigntobranchesss'])){
+    $branch_id = $_POST['branch_id']; 
+    $branch_name = $_POST['branch_name']; 
+    $cashierIds = $_POST['cashierIds']; 
+    $warehouseIds = $_POST['warehouseIds']; 
+    $storeIds = $_POST['storeIds']; 
+
+    // Ensure these are arrays, if not convert empty
+    $cashierIds = is_array($cashierIds) ? $cashierIds : [];
+    $warehouseIds = is_array($warehouseIds) ? $warehouseIds : [];
+    $storeIds = is_array($storeIds) ? $storeIds : [];
+
+    // Sort arrays for consistent comparison
+    sort($cashierIds);
+    sort($warehouseIds);
+    sort($storeIds);
+
+    // Convert arrays to comma-separated strings for DB storage
+    $cashierIdsStr = implode(',', $cashierIds);
+    $warehouseIdsStr = implode(',', $warehouseIds);
+    $storeIdsStr = implode(',', $storeIds);
+
+    // Database connection assumed in $connection
+    // Check for duplicates in existing records for this branch
+    $checkQuery = "SELECT * FROM assign WHERE branch_id_fk = '$branch_id'";
+    $checkResult = mysqli_query($connection, $checkQuery);
+
+    $duplicateFound = false;
+    while($row = mysqli_fetch_assoc($checkResult)) {
+        $existingWarehouse = explode(',', $row['warehouse']);
+        $existingStore = explode(',', $row['store']);
+        $existingCashiers = explode(',', $row['cashiers']);
+
+        sort($existingWarehouse);
+        sort($existingStore);
+        sort($existingCashiers);
+
+        if (
+            $warehouseIds === $existingWarehouse &&
+            $storeIds === $existingStore &&
+            $cashierIds === $existingCashiers
+        ) {
+            $duplicateFound = true;
+            break;
+        }
+    }
+
+    if ($duplicateFound) {
+      
+    }
+
+    // Insert new record if no duplicate
+    $insertQuery = "INSERT INTO assign (branch_id_fk, warehouse, store, branchname, cashiers) 
+                    VALUES ('$branch_id', '$warehouseIdsStr', '$storeIdsStr', '$branch_name', '$cashierIdsStr')";
+
+    if (mysqli_query($connection, $insertQuery)) {
+        echo "1"; // success response
+    } else {
+        echo "Insert error: " . mysqli_error($connection);
+    }
+}
+
+
+
+ if (isset($_POST['showOffBranches'])) {
+    $query = "SELECT id, `name` FROM branches";
+    $result = mysqli_query($connection, $query);
+
+    if (!$result) {
+        echo mysqli_error($connection);
+        exit;
+    }
+
+    $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    if (count($rows) > 0) {
+        echo '<option value="">--Choose one--</option>';
+        foreach ($rows as $row) {
+            echo '<option value="' . $row['id'] . '">' . htmlspecialchars($row['name']) . '</option>';
+        }
+    } else {
+        echo '<option value="">--No data found--</option>';
+    }
+}
+
+
+   if (isset($_POST['warehouseDropdown'])) {
+    $query = "SELECT id, name FROM warehouse";
+    $result = mysqli_query($connection, $query);
+
+    if (!$result) {
+        echo mysqli_error($connection);
+        exit;
+    }
+
+    $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    if (count($rows) > 0) {
+        echo '<li><a class="dropdown-item" href="#">--Choose one--</a></li>';
+        foreach ($rows as $row) {
+            echo '<li><a class="dropdown-item warehousedrrpdown" myid="' . $row['id'] . '" href="#">' . htmlspecialchars($row['name']) . '</a></li>';
+        }
+    } else {
+        echo '<li><a class="dropdown-item" href="#">--None--</a></li>';
+    }
+}
+
+
+
+
+   if (isset($_POST['storeDrodown'])) {
+    $query = "SELECT id, name FROM store";
+    $result = mysqli_query($connection, $query);
+
+    if (!$result) {
+        echo mysqli_error($connection);
+        exit;
+    }
+
+    $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    if (count($rows) > 0) {
+        echo '<li><a class="dropdown-item" href="#">--Choose one--</a></li>';
+        foreach ($rows as $row) {
+            echo '<li><a class="dropdown-item storewarehousedrpdown" myid="' . $row['id'] . '" href="#">' . htmlspecialchars($row['name']) . '</a></li>';
+        }
+    } else {
+        echo '<li><a class="dropdown-item" href="#">--None--</a></li>';
+    }
+}
+
+
+
+ if (isset($_POST['showoffCashiers'])) {
+    $query = "SELECT id, name FROM cashiers";
+    $result = mysqli_query($connection, $query);
+
+    if (!$result) {
+        echo mysqli_error($connection);
+        exit;
+    }
+
+    $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    if (count($rows) > 0) {
+        echo '<li><a class="dropdown-item cashierdropdown" href="#">--Choose one--</a></li>';
+        foreach ($rows as $row) {
+            echo '<li><a class="dropdown-item cashierdropdown" myid="' . $row['id'] . '" href="#">' . htmlspecialchars($row['name']) . '</a></li>';
+        }
+    } else {
+        echo '<li><a class="dropdown-item cashierdropdown" href="#">--None--</a></li>';
+    }
+}
+
+
+
+ if (isset($_POST['updateStore'])) {
+    $id = intval($_POST['id']);
+    $name = ucfirst(trim($_POST['name']));  
+
+    // Check if another store with the same name already exists (excluding current one)
+    $stmt = $connection->prepare("SELECT id FROM store WHERE name = ? AND id != ?");
+    $stmt->bind_param("si", $name, $id);
+    $stmt->execute();
+    $stmt->store_result();
+
+    if ($stmt->num_rows > 0) {
+        echo 12; // Store name already exists for another record
+        exit;
+    } else {
+        // Update store name
+        $update = $connection->prepare("UPDATE store SET name = ? WHERE id = ?");
+        $update->bind_param("si", $name, $id);
+        $update->execute();
+
+        if ($update->affected_rows > 0) {
+            echo 1; // Update success
+        } else {
+            echo "Update failed or no change";
+        }
+
+        $update->close();
+    }
+
+    $stmt->close();
+}
+
+
+if (isset($_POST['saveStore'])) {
+    $name = ucfirst(trim($_POST['name']));  
+
+    // Check if store name already exists
+    $stmt = $connection->prepare("SELECT id FROM store WHERE name = ?");
+    $stmt->bind_param("s", $name);
+    $stmt->execute();
+    $stmt->store_result();
+
+    if ($stmt->num_rows > 0) {
+        echo 12; // Store already exists
+        exit;
+    } else {
+        // Insert new store name
+        $insert = $connection->prepare("INSERT INTO store (name) VALUES (?)");
+        $insert->bind_param("s", $name);
+        $insert->execute();
+
+        if ($insert->affected_rows > 0) {
+            echo 1; // Insert success
+        } else {
+            echo "Insert failed";
+        }
+
+        $insert->close();
+    }
+
+    $stmt->close();
+}
+
+ 
+
+
  if (isset($_POST['saveName'])) {
     $name = ucfirst(trim($_POST['name']));  
 
- 
     $stmt = $connection->prepare("SELECT id FROM cashiers WHERE name = ?");
     $stmt->bind_param("s", $name);
     $stmt->execute();
@@ -1527,8 +2407,15 @@ if(isset($_POST['fetchSuppliers'])){
                     <td>
                         <?php echo $row['mobile']?>
                     </td>
+                    
                     <td>
                         <?php echo $row['telephone']?>
+                    </td>
+                    <td>
+                        <a href="#" 
+                        bank_id="<?php echo $row['id']?>" 
+                        class="btn btn-link btn-sm viewbankdetailssection"><u>View bank details</u>
+                         </a>
                     </td>
                     <td>
                         <?php echo $row['address']?>
@@ -1714,6 +2601,38 @@ if (isset($_POST['changeCategoryName'])) {
     }
 
     $stmt->close();
+}
+
+ 
+
+ if (isset($_POST['viewbankdetails'])) {
+    $id = $_POST['bank_id']; 
+    $query = "SELECT * FROM supplier_bank_details WHERE supplier_id_fk = '$id'";
+    $result = mysqli_query($connection, $query); 
+
+    if ($result) {
+        if (mysqli_num_rows($result) > 0) {
+            $row = mysqli_fetch_assoc($result);
+            ?>
+            
+          <div id="printArea" style="font-family: monospace; font-size: 12px; line-height: 1.2;">
+    <p><strong>Account Name:</strong> <?php echo $row['bank']; ?></p>
+    <p><strong>Account No:</strong> <?php echo $row['account_number']; ?></p>
+    <p><strong>Bank:</strong> <?php echo $row['bank']; ?></p>
+    <p><strong>Branch:</strong> <?php echo $row['branch']; ?></p>
+</div>
+
+ 
+
+            <button class="btn btn-primary btn-sm" onclick="printDiv('printArea')">Print</button>
+
+            <?php
+        } else {
+            echo "<h4>No bank details found.</h4>";
+        }
+    } else {
+        echo "Query Error: " . mysqli_error($connection); 
+    }
 }
 
 
@@ -2031,6 +2950,8 @@ if(isset($_POST['saveAddCategoryform'])){
         echo 12; 
         exit;
     }
+
+    
 
     $query = "INSERT INTO categories(`name`,code) VALUES('$categoryName','$categoryCode')";
     $result = mysqli_query($connection,$query); 

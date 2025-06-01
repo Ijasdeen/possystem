@@ -56,10 +56,11 @@ if(!isset($_SESSION['admin_name'])){
 
     <!-- Helpers -->
     <script src="assets/vendor/js/helpers.js"></script>
-
-    
+ 
     <script src="assets/js/config.js"></script>
   </head>
+
+ 
 
   <body>
     <!-- Layout wrapper -->
@@ -117,7 +118,8 @@ if(!isset($_SESSION['admin_name'])){
                           id="Triangle"
                           transform="translate(19.000000, 11.000000) rotate(-300.000000) translate(-19.000000, -11.000000) "
                         >
-                          <use fill="#696cff" xlink:href="#path-5"></use>
+                        
+                        <use fill="#696cff" xlink:href="#path-5"></use>
                           <use fill-opacity="0.2" fill="#FFFFFF" xlink:href="#path-5"></use>
                         </g>
                       </g>
@@ -187,18 +189,32 @@ if(!isset($_SESSION['admin_name'])){
 &nbsp;Color</div>
                   </a>
                 </li>
- 
-  
+
+                      <li class="menu-item">
+                  <a href="purchase.php" class="menu-link">
+                    <div data-i18n="Blank"><i class="menu-icon tf-icons bx bx-color-fill"></i>
+                     &nbsp;Purchase    
+                    </div>
+                  </a>
+                </li>
+
+
+                   <li class="menu-item">
+                  <a href="purchaseitems.php" class="menu-link">
+                    <div data-i18n="Blank"><i class="menu-icon tf-icons bx bx-cart"></i>
+                     &nbsp;Purchased Items    
+                    </div>
+                  </a>
+                </li>
+   
               </ul>
             </li>
 
-
-
-                        <li class="menu-item">
+                         <li class="menu-item">
               <a href="javascript:void(0);"  class="menu-link menu-toggle">
                <i class="menu-icon tf-icons bx bx-group"></i>
 
-                <div data-i18n="Layouts">People</div>
+                <div data-i18n="Layouts">Stack holders</div>
               </a>
 
               <ul class="menu-sub">
@@ -261,6 +277,23 @@ if(!isset($_SESSION['admin_name'])){
                   <div data-i18n="Analytics">Cashiers</div>
               </a>
             </li>
+
+                <li class="menu-item">
+              <a href="store.php" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-store"></i>
+              <div data-i18n="Analytics">Store</div>
+              </a>
+            </li>
+
+
+             <li class="menu-item">
+              <a href="assign.php" class="menu-link">
+               <i class="menu-icon tf-icons bx bx-link-alt"></i>
+
+              <div data-i18n="Analytics">Assign Bussiness</div>
+              </a>
+            </li>
+
 
             <li class="menu-header small text-uppercase d-none">
               <span class="menu-header-text">Pages</span>
@@ -415,21 +448,21 @@ if(!isset($_SESSION['admin_name'])){
                         <span class="align-middle">My Profile</span>
                       </a>
                     </li>
+
+                    <li>
+                      <a class="dropdown-item" id="changePaswordtrigger" href="#" data-toggle="modal" data-target="#changePasswordmodal">
+                      <i class="bx bx-lock-alt me-2"></i>  
+                   <span class="align-middle">Change Password</span>
+                      </a>
+                    </li>
+
                     <li>
                       <a class="dropdown-item" href="#">
                         <i class="bx bx-cog me-2"></i>
                         <span class="align-middle">Settings</span>
                       </a>
                     </li>
-                    <li>
-                      <a class="dropdown-item" href="#">
-                        <span class="d-flex align-items-center align-middle">
-                          <i class="flex-shrink-0 bx bx-credit-card me-2"></i>
-                          <span class="flex-grow-1 align-middle">Billing</span>
-                          <span class="flex-shrink-0 badge badge-center rounded-pill bg-danger w-px-20 h-px-20">4</span>
-                        </span>
-                      </a>
-                    </li>
+                   
                     <li>
                       <div class="dropdown-divider"></div>
                     </li>
@@ -445,5 +478,9 @@ if(!isset($_SESSION['admin_name'])){
               </ul>
             </div>
           </nav>
+
+
+          
+
 
          

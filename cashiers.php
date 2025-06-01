@@ -30,7 +30,7 @@ require_once('layouts/header.php')
             </div>
 
 
-             <div class="modal fade" id="editCashiermodal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+             <div class="modal fade" id="editCashiermodalsection" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header bg-primary">
@@ -166,6 +166,10 @@ require_once('layouts/header.php')
 
 
             <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Home /</span> Cashiers</h4>
+            
+               <div class="my-3">
+                <input type="search" name="" placeholder="Search By name or category code" id="searchCategories" class="form-control">
+               </div>
 
                <div class="my-3">
                 <button class="btn btn-primary btn-sm" data-bs-target="#addCategoryModal" data-bs-toggle="modal">
@@ -207,3 +211,17 @@ require_once('layouts/footer.php');
 ?>
 
  <script src="js/cashier.js" defer></script>
+
+ 
+ <script>
+    $(document).ready(function(){
+        
+   $('#searchCategories').on('keyup', function() {
+        var value = $(this).val().toLowerCase();
+        $('#showcashiers tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().includes(value));
+        });
+    });
+
+    }); 
+ </script>
