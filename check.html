@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Info</title>
+</head>
+<body>
+
+<script>
+async function getClientInfo() {
+  try {
+    const response = await fetch('get_client_info.php');
+    const serverData = await response.json();
+
+    const deviceOS = navigator.platform || "Unknown";
+    const deviceName = navigator.userAgent || "Unknown";
+
+    const geoRes = await fetch(`https://ipapi.co/${serverData.ip}/json/`);
+    const geoData = await geoRes.json();
+
+    console.log({
+      ip: serverData.ip,
+      userAgent: serverData.user_agent,
+      dateTime: serverData.datetime,
+      os: deviceOS,
+      device: deviceName,
+      location: {
+        city: geoData.city || "N/A",
+        region: geoData.region || "N/A",
+        country: geoData.country_name || "N/A"
+      }
+    });
+
+  } catch (err) {
+    console.error("Error fetching client info:", err);
+  }
+}
+
+getClientInfo();
+</script>
+
+</body>
+</html>

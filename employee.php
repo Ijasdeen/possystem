@@ -5,45 +5,71 @@ require_once('layouts/header.php')
 <div class="content-wrapper">
 
              <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header bg-primary">
-                            <h5 class="modal-title text-white" id="addCategoryModalLabel">Add Customers</h5>
+                            <h5 class="modal-title text-white" id="addCategoryModalLabel">Add Employees</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form id="saveCustomersform" method="POST">
+                        <form id="saveEmployeessformsection" method="POST">
                            <div class="modal-body">
-                              <div class="form-group">
-                                <label for="">Customer Name <span class="text text-danger fw-bold">*</span></label>
-                                <input type="text" class="form-control" required name="customer_name" id="customer_name" required>
-                              </div>
-                              <div class="form-group">
-                                <label for="">Customer Mobile <span class="text text-danger fw-bold">*</span></label>
-                            <input type="text" class="form-control" name="customer_mobile" id="customer_mobile" required>
-                              </div>
-                              <div class="form-group">
-                                <label for="">Customer Date of Birth</label>
-                                <input type="date" name="dob" id="dob" class="form-control">
-                              </div>
-                              <div class="form-group">
-                                <label for="">Customer NIC</label>
-                                <input type="text" class="form-control" name="customer_nic" id="customer_nic" >
-                              </div>
-                          <div class="form-group">
-                            <label for="">Credit</label>
-                            <input type="number" class="form-control" name="credit" id="credit" value="0">
-                          </div>
-                          <div class="form-group">
-                            <label for="">Debit</label>
-                            <input type="number" class="form-control" name="debit" id="debit" value="0">
-                          </div>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="">Full Name</label>
+                                            <input type="text" class="form-control" id="fullnamesection">
+                                        </div>
+                                     </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="">NIC Number</label>
+                                            <input type="text" class="form-control" id="nicnumber">
+                                        </div>
+                                    
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="">Working days</label>
+                                            <input type="tel" class="form-control" id="workingdays">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="">Mobile number</label>
+                                            <input type="text" class="form-control" id="mobileNumber">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="">Basic Salary</label>
+                                            <input type="text" class="form-control" id="basicsalary">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="">EPF</label>
+                                            <div class="form-check">
+  <input class="form-check-input" type="checkbox" value="" id="epfchecks">
+  <label class="form-check-label" for="flexCheckDefault">
+    Default checkbox
+  </label>
+</div>
+                                        </div>
+                                    </div>
 
-                              <div class="form-group">Gender</div>
-                              <select name="gender" id="gender"  class="form-control">
-                                <option value="">--Select one--</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                              </select>
+                                    <div class="col-md-3">
+                                       <div class="form-group">
+                                         <label for="">EPF basic salary</label>
+                                         <input type="text" class="form-control" id="epfbasicsalary">
+                                       </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="">Address</label>
+                                        <input type="text" class="form-control" id="myaddress">
+                                    </div>
+                                </div>
+                            </div>
                            </div>
                           
                             <div class="modal-footer">
@@ -54,9 +80,7 @@ require_once('layouts/header.php')
                     </div>
                 </div>
             </div>
-
-
-
+ 
             <div class="modal fade" id="openingbalancePanel" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -73,6 +97,7 @@ require_once('layouts/header.php')
  
                               <div class="form-group">
 
+
                               </div>
                             
                            </div>
@@ -86,10 +111,7 @@ require_once('layouts/header.php')
                 </div>
             </div>
 
-
-
-            
-
+ 
             <div class="modal fade" id="fixHtmlsection" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -124,13 +146,7 @@ require_once('layouts/header.php')
                 </div>
             </div>
 
-
-
-
-
-
-
-
+ 
                          <div class="modal fade" id="updateCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -189,7 +205,7 @@ require_once('layouts/header.php')
       
             <div class="container-xxl flex-grow-1 container-p-y">
  
-            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Home /</span> Customers</h4>
+            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Home /</span> Employees</h4>
 <div class="container">
   <div class="row">
     <div class="col-md-4">
@@ -200,43 +216,33 @@ require_once('layouts/header.php')
 </div>
                <div class="my-3">
                 <button class="btn btn-primary btn-sm" data-bs-target="#addCategoryModal" data-bs-toggle="modal">
-                <i class="menu-icon tf-icons bx bx-plus"></i> ADD Customers
+                <i class="menu-icon tf-icons bx bx-plus"></i> ADD Employees
                 </button>
                 
                </div>
               <div class="card">
                 <h5 class="card-header"></h5>
                 <div class="table-responsive text-nowrap">
-                  <table class="table">
+                  <table class="table table-striped">
                     <thead>
                       <tr>
                       <th>Actions</th>
                          <th>#</th>
-                        <th>Customer Name</th>
-                        <th>Customer Mobile</th>
-                        <th>Date of Birth</th>
+                        <th> Name</th>
+                        <th> Mobile</th>
                         <th>NIC</th>
-                        <th>Gender</th>
-                        <th>Credit</th>
-                        <th>Debit</th>
-                        
+                        <th>Working days</th>
+                        <th>Basic salary</th>
+                        <th>EPF</th>
+                        <th>EPF basic salary</th>
+                         
                       </tr>
                     </thead>
-                   <tbody id="showCustomers">
+                   <tbody id="showemployees">
 
                    </tbody>
                     <tfoot class="table-border-bottom-0">
-                    <tr>
-                      <th>Actions</th>
-                        <th>#</th>
-                       <th>Customer Name</th>
-                        <th>Customer Mobile</th>
-                        <th>Date of Birth</th>
-                        <th>NIC</th>
-                        <th>Gender</th>
-                        <th>Credit</th>
-                        <th>Debit</th>
-                       </tr>
+                  
                     </tfoot>
                   </table>
                 </div>
@@ -254,4 +260,4 @@ require_once('layouts/header.php')
 require_once('layouts/footer.php');
 ?>
 
- <script src="js/customers.js" defer></script>
+ <script src="js/employees.js" defer></script>

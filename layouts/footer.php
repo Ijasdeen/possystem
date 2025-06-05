@@ -29,6 +29,44 @@
     </div>
     <!-- / Layout wrapper -->
 
+    <div class="modal fade" id="updateProfileModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-dark">
+        <h5 class="modal-title text-white" id="exampleModalLabel1">Update Profile</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="updateProfileForm" method="POST">
+          <div class="form-group">
+            <label for="fullname">Full Name</label>
+            <input type="text" class="form-control" id="fullname" name="fullname">
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" class="form-control" id="email" name="email">
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="text" class="form-control" id="phone" name="phone">
+          </div>
+          <div class="form-group">
+            <label for="address">Address</label>
+            <textarea class="form-control" id="address" name="address" rows="2"></textarea>
+          </div>
+          <div class="form-group my-2">
+            <button type="submit" class="form-control btn btn-primary">Update Profile</button>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <!-- Optional footer content -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
         <div class="modal fade" id="changePasswordmodal" tabindex="-1" aria-hidden="true">
                           <div class="modal-dialog" role="document">
@@ -63,9 +101,7 @@
                             
                               </div>
                               <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                  Close
-                                </button>
+                               
                                
                               </div>
                             </div>
@@ -73,6 +109,10 @@
                         </div>
                       </div>
                     </div>
+
+
+
+                    
 
     
 

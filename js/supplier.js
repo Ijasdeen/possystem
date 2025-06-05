@@ -17,6 +17,79 @@ $(document).ready(function(){
 
     showOffSuppliers(); 
 
+    const showoffsupplierType = () => {
+          $.ajax({
+            url: 'action.php',
+            type: 'POST',
+            data: { showoffsupplierType: 44 },
+            success: function(response) {
+                 $('#supplier_type').html(response);
+                 $('#usupplier_type').html(response); 
+            },
+            error: function(xhr, status, error) {
+                toastr.error('Failed to fetch suppliers.');
+            }
+        });
+    }
+
+    showoffsupplierType(); 
+
+
+     $('#supplier_type').on('keypress', function(e) {
+    if (e.which === 13) {
+    e.preventDefault();
+    $(this).closest('form').submit();
+  } else if (e.key === '+') {
+    e.preventDefault();
+    $('#Suppliertypename').focus(); 
+    $('#entersuppliertype').modal('show'); // Show modal with ID
+  }
+});
+
+
+ 
+    $('#saveAccountNameform').on('submit',function(e){
+        e.preventDefault(); 
+        let Suppliertypename = $('#Suppliertypename').val().trim(); 
+        if(Suppliertypename=='' || !Suppliertypename){
+            toastr.error("Please enter the supplier type ");
+            $('#Suppliertypename').css('border','2px solid red').focus(); 
+            return false;  
+        }
+        else {
+            $.ajax({
+                url:'action.php',
+                method:'POST',
+                data:{
+                    Suppliertypename:Suppliertypename, 
+                    saveAccountform:55
+                },
+                success:function(data){
+                     if(data==1){
+                        showoffsupplierType(); 
+                         toastr.info("Saved successfully"); 
+                        $('#saveAccountNameform')[0].reset(); 
+                        $('#Suppliertypename').focus(); 
+                         return false; 
+                     }
+                     else if(data==12){
+                         toastr.error("Supplier type already exists");
+                        $('#Suppliertypename').css('border','2px solid red').focus(); 
+                          return false;  
+                     }
+                     else {
+                        toastr.error(data); 
+                     }
+                },
+                error:function(err){
+                    alert("Error found in " + err); 
+                    toastr.error(err); 
+                }
+            })
+
+        }
+    }); 
+
    $('#searchSuppliers').on('keyup', function() {
         var value = $(this).val().toLowerCase();
         $('#extractsuppliers tr').filter(function() {
@@ -26,6 +99,48 @@ $(document).ready(function(){
 
 
 
+    
+   $('#searchbankdetailsbank').on('keyup', function() {
+        var value = $(this).val().toLowerCase();
+        $('#accountNamesectionlineup tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().includes(value));
+        });
+    });
+
+
+    
+
+
+    $('#addthesuppliertypess').click(function(){
+            $('#entersuppliertype').modal('show');
+            $('#Suppliertypename').focus();  
+    }); 
+
+        $('#uaddthesuppliertypess').click(function(){
+            $('#entersuppliertype').modal('show'); 
+            $('#Suppliertypename').focus(); 
+    }); 
+
+
+
+    $('#addthesuppliertype').on('click',function(){
+         Swal.fire({
+  title: "Enter something",
+  input: "text",
+  showCancelButton: true,
+  confirmButtonText: "OK",
+  customClass: {
+    popup: 'swal-over-modal'
+  }
+}).then((result) => {
+  if (result.isConfirmed) {
+    Swal.fire(`You entered: ${result.value}`);
+  }
+});
+
+    }); 
+
+
     $('body').on('click', '.viewbankdetailssection', function() {
     let bank_id = Number($(this).attr('bank_id'));
        $.ajax({
@@ -33,10 +148,9 @@ $(document).ready(function(){
             type: 'POST',
             data: { bank_id: bank_id, viewbankdetails:55 },
             success: function(response) {
-                 $('#myModal').modal('show'); 
-                 $('#accountNamesection').html(response); 
-
-             
+                 $('#myModalsection').modal('show'); 
+                 $('#accountNamesectionlineup').html(response); 
+                
             },
             error: function(xhr, status, error) {
                 toastr.error('Failed to fetch suppliers.');
@@ -44,6 +158,7 @@ $(document).ready(function(){
         });
     
 });
+
 
     const getBankdetailsdata = (supplier_id_fk) => {
        
@@ -61,12 +176,10 @@ $(document).ready(function(){
             error:function(err){
                 alert("Error found in"  +err); 
             }
-        })
+        }); 
     }
  
-
-
-  
+   
     $('body').delegate('.suppliereditbuttonsection', 'click', function () {
     let supplier_name = $(this).attr('supplier_name');
     let mobile = $(this).attr('mobile');
@@ -79,6 +192,9 @@ $(document).ready(function(){
     let contact_number2 = $(this).attr('contact_number2');
     let supplier_category = $(this).attr('supplier_category');
     let warehouse_address = $(this).attr('warehouse_address');
+    let city = $(this).attr('city'); 
+
+    let location = $(this).attr('location'); 
 
     sessionStorage.setItem('supplier_id',$(this).attr('myid')); 
     getBankdetailsdata($(this).attr('myid')); 
@@ -87,16 +203,18 @@ $(document).ready(function(){
     $('#usupplier_name').val(supplier_name);
     $('#umobile').val(mobile);
     $('#utelephone').val(telephone);
-    $('#uaddress').val(address);
+    $('#usupplieraddress').val(address);
     $('#ushort_name').val(short_name);
-    $('#eumail').val(email);
+    $('#uemail').val(email);
     $('#ucontactperson_name').val(contact_name);
     $('#ucontactperson_mobile').val(contact_number1);
     $('#ucontactperson_mobile2').val(contact_number2);
     $('#uwarehouse_address').val(warehouse_address);
     $('#usupplier_type').val(supplier_category);
-
- 
+    $('#ulocation').val(location);
+    $("#ucitylineup").val(city); 
+    
+  
     $('#editModal').modal('show'); 
 });
 
@@ -280,10 +398,18 @@ $(document).ready(function(){
 
     
 
+        $('#cleartheform').on('click',function(){
+            $('#supplierSaveform')[0].reset(); 
+            $('#supplier_name').focus(); 
+            toastr.success("Form cleared successfully"); 
+        }); 
+
+
+
     $('#supplierSaveform').on('submit',function(e){
         e.preventDefault(); 
         let supplier_name = $("#supplier_name").val(); 
-        let address = $('#address').val(); 
+        let address = $('#supplieraddress').val(); 
         let mobile = $("#mobile").val(); 
         let telephone = $('#telephone').val(); 
         let short_name = $('#short_name').val(); 
@@ -293,6 +419,30 @@ $(document).ready(function(){
         let warehouse_address = $('#warehouse_address').val(); 
         let supplier_type = $('#supplier_type').val();
         let contactperson_mobile = $('#contactperson_mobile').val(); 
+        let citylineup = $('#citylineup').val().trim(); 
+
+        let location = $('#location').val().trim(); 
+
+
+        if(mobile == '') {
+            toastr.error('Please enter mobile number.');
+            $('#mobile').css('border', '2px solid red').focus();
+            return false;
+        }
+
+ 
+        if(mobile!=''){
+            if(isNaN(mobile)){
+                toastr.error("Only digits should be acceptable");
+                 $('#mobile').css('border','2px solid red').focus(); 
+                 return false;  
+            }
+            if(mobile.length!=10){
+                toastr.info("Mobile number should be 10 digits");
+                $('#mobile').css('border','2px solid red').focus(); 
+                return false;  
+            }
+        }
 
 
         if(contactperson_mobile!=''){
@@ -312,11 +462,12 @@ $(document).ready(function(){
 
         if(contactperson_mobile2!=''){
             if(contactperson_mobile2.length!=10){
-            toastr.info('Contact person mobile number 2 should be 10 digits.');
+            toastr.info('Warehouse mobile number 2 should be 10 digits.');
             $('#contactperson_mobile2').css('border', '2px solid red').focus();
             return;
         }
         if(isNaN(contactperson_mobile2)){
+            
             toastr.info('Please enter a valid contact person mobile number 2.');
             $('#contactperson_mobile2').css('border', '2px solid red').focus();
             return;
@@ -366,12 +517,13 @@ $(document).ready(function(){
             return false;
         }
 
-        if(mobile == '') {
-            toastr.error('Please enter mobile number.');
-            $('#mobile').css('border', '2px solid red').focus();
-            return false;
-        }
+            $('#mobile').css('border', '');
+            $('#supplier_name').css('border', '');
+            $('#contactperson_mobile2').css('border', '');
+            $('#contactperson_mobile').css('border',''); 
 
+
+        
         $.ajax({
             url : 'action.php', 
             method:'POST', 
@@ -387,6 +539,8 @@ $(document).ready(function(){
                 contactperson_mobile2: contactperson_mobile2,
                 warehouse_address: warehouse_address,
                 contactperson_mobile:contactperson_mobile, 
+                location:location, 
+                citylineup:citylineup, 
                 supplier_type: supplier_type
             },
             success:function(data){
@@ -399,6 +553,7 @@ $(document).ready(function(){
                     $('#addedBankdetailssection').empty();
                     toastr.success('Supplier saved successfully!');
                     $('#supplier_name').focus(); 
+                    showOffSuppliers(); 
                 }
             },
             error:function(xhr, status, error){

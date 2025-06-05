@@ -801,7 +801,73 @@ if (is_array($sizes) && !empty($myid)) {
 
 
 }
+
+
  
+if (isset($_POST['Updateform'])) {
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Sanitize and get values
+        $admin_name = mysqli_real_escape_string($connection, $_POST['admin_name'] ?? '');
+        $shop_name = mysqli_real_escape_string($connection, $_POST['shop_name'] ?? '');
+        $shop_mobile = mysqli_real_escape_string($connection, $_POST['shop_mobile'] ?? '');
+
+        // Handle file upload
+        $shop_logo_name = '';
+        if (!empty($_FILES['admin_logo']['name'])) {
+            $fileTmp = $_FILES['admin_logo']['tmp_name'];
+            $fileName = $_FILES['admin_logo']['name'];
+            $fileType = mime_content_type($fileTmp);
+
+            // Allow only images
+            if (strpos($fileType, 'image/') !== 0) {
+                echo 'Only image files are allowed.';
+                exit;
+            }
+
+            // Sanitize filename (remove spaces and special chars)
+            $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
+            $safeName = time() . '_' . preg_replace("/[^a-zA-Z0-9_-]/", "", pathinfo($fileName, PATHINFO_FILENAME)) . '.' . $fileExt;
+
+            $upload_dir = 'uploads/';
+            $upload_path = $upload_dir . $safeName;
+
+            // Check if upload directory exists
+            if (!is_dir($upload_dir)) {
+                mkdir($upload_dir, 0755, true);
+            }
+
+            if (!move_uploaded_file($fileTmp, $upload_path)) {
+                echo 'Failed to upload logo.';
+                exit;
+            }
+
+            $shop_logo_name = $safeName;
+        }
+
+        // Build SQL query
+        $update_query = "UPDATE admin SET 
+                            admin_name = '$admin_name',
+                            shop_name = '$shop_name',
+                            mobilenumber = '$shop_mobile'";
+
+        if ($shop_logo_name !== '') {
+            $update_query .= ", shop_logo = '$shop_logo_name'";
+        }
+
+        $update_query .= " LIMIT 1";
+
+        // Execute the query
+        if (mysqli_query($connection, $update_query)) {
+            echo 1; 
+        } else {
+            echo 'Error: ' . mysqli_error($connection);
+        }
+    }
+}
+
+
+
  if (isset($_POST['changepassword'])) {
     $oldpassword = mysqli_real_escape_string($connection, $_POST['oldpassword']);
     $confirmpassword = mysqli_real_escape_string($connection, $_POST['confirmpassword']);
@@ -1657,6 +1723,8 @@ if(isset($_POST['categoryDelete'])){
     $warehouse_address = $_POST['warehouse_address']; 
     $supplier_type = $_POST['supplier_type'];
     $contactperson_mobile = $_POST['contactperson_mobile']; 
+    $location = $_POST['location']; 
+    $citylineup = $_POST['citylineup']; 
 
     if (empty($supplier_name) || empty($mobile)) {
         echo "required_fields_missing";
@@ -1670,6 +1738,8 @@ if(isset($_POST['categoryDelete'])){
         exit;
     }
     }
+    date_default_timezone_set('Asia/Kolkata');
+$currentDateTime = date('Y-m-d H:i:s');
 
     $checkQuery = "SELECT id FROM supplier WHERE mobile = ?";
     $stmt = $connection->prepare($checkQuery);
@@ -1685,13 +1755,18 @@ if(isset($_POST['categoryDelete'])){
     $stmt->close();
 
     // Insert new supplier
-    $insertQuery = "INSERT INTO supplier (supplier_name, address, mobile, telephone, short_name, email, contact_name, contact_number2, warehouse_address, supplier_category, contact_number1)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $insertQuery = "INSERT INTO supplier (supplier_name, `address`, mobile, telephone, short_name, email, contact_name, contact_number2, warehouse_address, supplier_category, contact_number1,`location`, city,`date`)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?)";
     $stmtss = $connection->prepare($insertQuery);
-    $stmtss->bind_param("sssssssssss", $supplier_name, $address, $mobile, $telephone, $short_name, $email, $contactperson_name, $contactperson_mobile2, $warehouse_address, $supplier_type, $contactperson_mobile);
+    $stmtss->bind_param("ssssssssssssss", $supplier_name, $address, $mobile, $telephone, $short_name, $email, $contactperson_name, $contactperson_mobile2, $warehouse_address, $supplier_type, $contactperson_mobile,$location, $citylineup,$currentDateTime);
 
     if ($stmtss->execute()) {
+          $message = "Dear ".$supplier_name.",
+You have been successfully registered in our system as a supplier.
+Welcome aboard!";
         echo $connection->insert_id;
+
+    sendlineupssms($mobile,$message); 
     } else {
         echo 0;
     }
@@ -2092,6 +2167,13 @@ if(isset($_POST['changeSubCategorysection'])){
         $gender
     );
     $stmt->execute();
+    $message = "Dear ".$customer_name.", You have been registered at our shop 
+    
+    ~Thank you~
+    Come Again....
+
+    "; 
+     sendlineupssms($customer_mobile,$message); 
     echo 1; 
 }
 
@@ -2373,6 +2455,34 @@ if(isset($_POST['updateSupplier'])){
 
     mysqli_stmt_close($stmt);
 }
+ 
+if (isset($_POST['saveAccountform'])) {
+    $Suppliertypename = ucfirst(trim($_POST['Suppliertypename']));
+
+     $checkStmt = $connection->prepare("SELECT id FROM suppliertype WHERE `type` = ?");
+    $checkStmt->bind_param("s", $Suppliertypename);
+    $checkStmt->execute();
+    $checkStmt->store_result();
+
+    if ($checkStmt->num_rows > 0) {
+        echo 12; 
+        $checkStmt->close();
+        exit;
+    }
+    $checkStmt->close();
+ 
+    $insertStmt = $connection->prepare("INSERT INTO suppliertype(`type`) VALUES (?)");
+    $insertStmt->bind_param("s", $Suppliertypename);
+
+    if ($insertStmt->execute()) {
+        echo 1; // Success
+    } else {
+        echo "Error: " . $insertStmt->error;
+    }
+
+    $insertStmt->close();
+}
+
 
  if(isset($_POST['deleteSuppliersection'])){
     $supplier_id_fk = $_POST['supplier_id_fk']; 
@@ -2386,6 +2496,42 @@ if(isset($_POST['updateSupplier'])){
     }
 }
 
+
+ if (isset($_POST['showoffsupplierType'])) {
+    $query = "SELECT type FROM suppliertype";
+    $result = mysqli_query($connection, $query);
+
+    
+    echo '<option value="Local">Local</option>';
+    echo '<option value="Overseas">Overseas</option>';
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        $options = '';
+        $deletableList = '';
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            $type = htmlspecialchars($row['type'], ENT_QUOTES, 'UTF-8');
+
+           
+            $options .= "<option value=\"$type\">$type</option>";
+
+         
+            if ($type !== 'Local' && $type !== 'Overseas') {
+                $deletableList .= "
+                    <li>
+                        $type 
+                        <button class='btn btn-danger btn-sm removeSupplierType' data-type=\"$type\">Remove</button>
+                    </li>
+                ";
+            }
+        }
+
+        echo $options;
+
+        // Optionally output deletable list (you can place this elsewhere)
+        echo "<ul>$deletableList</ul>";
+    }
+}
 
 
 
@@ -2415,6 +2561,12 @@ if(isset($_POST['fetchSuppliers'])){
                         <a href="#" 
                         bank_id="<?php echo $row['id']?>" 
                         class="btn btn-link btn-sm viewbankdetailssection"><u>View bank details</u>
+                         </a>
+                    </td>
+                    <td>
+                          <a href="<?php echo $row['location']?>" 
+                          target="_blank"
+                         class="btn btn-link btn-sm viewbankdetailssection"><u>View on google map</u>
                          </a>
                     </td>
                     <td>
@@ -2459,14 +2611,15 @@ if(isset($_POST['fetchSuppliers'])){
        contact_number2 = "<?php echo $row['contact_number2']?>"
        supplier_category  = "<?php echo $row['supplier_category']?>"
        warehouse_address = "<?php echo $row['warehouse_address']?>"
+       location = "<?php echo $row['location']?>"
+       city = "<?php echo $row['city']?>"
        myid = "<?php echo $row['id']?>"
                 
     >Edit <i class="menu-icon tf-icons bx bx-edit"></i>
 </a></li>
     <li><a class="dropdown-item deleteSupplier" supplier_id_fk="<?php echo $row['id']?>" href="#">Delete <i class="menu-icon tf-icons bx bx-trash"></i>
 </a></li>
-    <li><a class="dropdown-item" href="#">SEND SMS <i class="menu-icon tf-icons bx bx-message-rounded-dots"></i>
-</a></li>
+   
   </ul>
 </div>
                      </td>
@@ -2520,6 +2673,130 @@ if(isset($_POST['updateCustomersection'])){
 }
 
 
+ if (isset($_POST['addthecustomersection'])) {
+    $ucustomer_amount = floatval($_POST['ucustomer_amount']); 
+    $myid = intval($_POST['myid']); 
+
+    $query = "UPDATE customers SET debit = debit - $ucustomer_amount WHERE id = $myid";
+    $result = mysqli_query($connection, $query); 
+
+    if (!$result) {
+        echo mysqli_error($connection); 
+    }
+    else {
+        echo 1; 
+    }
+    
+}
+
+ 
+ if (isset($_POST['fetchEmployees'])) {
+    $query = "SELECT * FROM employees";
+    $result = mysqli_query($connection, $query); 
+    $index = 0; 
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            ?>
+            <tr>
+                <td>
+                    <button class="btn btn-info btn-sm editEmployees" myid="<?php echo $row['id']?>">EDIT</button>
+                    &nbsp; 
+                    <button class="btn btn-danger btn-sm deleteemployees" myid="<?php echo $row['id']?>">DELETE</button>
+                    &nbsp; 
+
+                </td>
+                <td>
+                    <?php echo ++$index; ?>
+                </td>
+                <td>
+                    <?php echo htmlspecialchars($row['name']); ?>
+                </td>
+                <td>
+                    <?php echo htmlspecialchars($row['mobilenumber']); ?>
+                </td>
+                <td>
+                    <?php echo htmlspecialchars($row['nic']); ?>
+                </td>
+                <td>
+                    <?php echo (int)$row['working_days']; ?>
+                </td>
+                <td>
+                    <?php echo number_format((float)$row['basic_salary'], 2); ?>
+                </td>
+                <td>
+                    <?php echo $row['epf'] == 1 ? 'Active' : 'Inactive'; ?>
+                </td>
+                <td>
+                    <?php echo number_format((float)$row['epf_basic_salary'], 2); ?>
+                </td>
+            </tr>
+            <?php
+        }
+    } else {
+        echo "<tr><td colspan='9' class='text-center'>No employees found.</td></tr>";
+    }
+}
+
+
+ if (isset($_POST['saveemployeesection'])) {
+    // Sanitize inputs
+    $fullname       = trim($_POST['fullname']);
+    $nicnumber      = trim($_POST['nicnumber']);
+    $workingdays    = (int) $_POST['workingdays'];
+    $basicsalary    = (float) $_POST['basicsalary'];
+    $epfchecks      = isset($_POST['epfchecks']) ? 1 : 0;
+    $epfbasicsalary = (float) $_POST['epfbasicsalary'];
+    $mobilenumber   = isset($_POST['mobilenumber']) ? trim($_POST['mobilenumber']) : '';
+    $myaddress      = trim($_POST['myaddress']);
+
+    // Check if mobile number already exists
+    $checkStmt = $connection->prepare("SELECT id FROM employees WHERE mobilenumber = ?");
+    $checkStmt->bind_param("s", $mobilenumber);
+    $checkStmt->execute();
+    $checkStmt->store_result();
+
+    if ($checkStmt->num_rows > 0) {
+        echo 12;
+        $checkStmt->close();
+        $connection->close();
+        exit;
+    }
+    $checkStmt->close();
+
+    // Insert with address field
+    $stmt = $connection->prepare("INSERT INTO employees (`name`, `address`, nic, working_days, basic_salary, epf, epf_basic_salary, mobilenumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssiddds", $fullname, $myaddress, $nicnumber, $workingdays, $basicsalary, $epfchecks, $epfbasicsalary, $mobilenumber);
+
+    if ($stmt->execute()) {
+        echo 1;
+    } else {
+        echo "error: " . $stmt->error;
+    }
+
+    $stmt->close();
+    $connection->close();
+}
+
+
+ 
+
+
+
+if(isset($_POST['addtheamountform'])){
+    $customer_amount = $_POST['customer_amount']; 
+    $myid = $_POST['myid']; 
+    $query = "UPDATE customers SET debit='$customer_amount' where id='$myid'"; 
+    $result = mysqli_query($connection,$query); 
+    if($result){
+
+        echo 1; 
+    }
+    else {
+        echo 0; 
+    }
+}
+
 if(isset($_POST['fetchCustomers'])){
     $query = "SELECT * FROM customers";
     $result = mysqli_query($connection,$query); 
@@ -2541,6 +2818,17 @@ if(isset($_POST['fetchCustomers'])){
                         credit = "<?php echo $row['credit']?>"
                         debit = "<?php echo $row['debit']?>"
                         >Edit</button>
+                        &nbsp; 
+                        <button class="btn btn-info btn-sm showoffopeningbalance"
+                        myid="<?php echo $row['id']?>"
+                        debit = "<?php echo $row['debit']?>"
+                        >Opening Balance</button>
+                        &nbsp; 
+                        <button class="btn btn-success btn-sm baddebitdeduct"
+                         myid="<?php echo $row['id']?>"
+                        debit = "<?php echo $row['debit']?>"
+                        credit = "<?php echo $row['credit']?>"
+                        >Bad debt deduct</button>
                     </td>
                     <td>
                         <?php echo ++$index?>
@@ -2614,17 +2902,28 @@ if (isset($_POST['changeCategoryName'])) {
         if (mysqli_num_rows($result) > 0) {
             $row = mysqli_fetch_assoc($result);
             ?>
-            
-          <div id="printArea" style="font-family: monospace; font-size: 12px; line-height: 1.2;">
-    <p><strong>Account Name:</strong> <?php echo $row['bank']; ?></p>
-    <p><strong>Account No:</strong> <?php echo $row['account_number']; ?></p>
-    <p><strong>Bank:</strong> <?php echo $row['bank']; ?></p>
-    <p><strong>Branch:</strong> <?php echo $row['branch']; ?></p>
-</div>
+            <tr>
+                <td>
+                    <?php echo $row['bank_account_name'] ?? ''?>
+                </td>
+                <td>
+                    <?php echo $row['account_number'] ?? ''?>
+                </td>
+                <td>
+                    <?php echo $row['bank'] ?? ''?>
+                </td>
+                <td>
+                    <?php echo $row['branch'] ?? ''?>
+                </td>
+                <td>
+                   <button class="btn btn-primary btn-sm" onclick="printDiv('printArea')">
+                     <i class="bx bx-printer me-2"></i>
+                   </button>
 
- 
-
-            <button class="btn btn-primary btn-sm" onclick="printDiv('printArea')">Print</button>
+                </td>
+            </tr>
+          
+         
 
             <?php
         } else {
@@ -2987,6 +3286,39 @@ if (isset($_POST['quickLogin'])) {
 }
 
  
+ if (isset($_POST['showoffLoginHistory'])) {
+    $query = "SELECT operating, browser, dateandtime FROM login_history ORDER BY id DESC";
+    $result = mysqli_query($connection, $query);
+
+    if ($result) {
+        $index = 0;
+        if (mysqli_num_rows($result) > 0) {
+            $rows = '';
+            while ($row = mysqli_fetch_assoc($result)) {
+                $index++;
+                $operating = htmlspecialchars($row['operating'], ENT_QUOTES, 'UTF-8');
+                $browser = htmlspecialchars($row['browser'], ENT_QUOTES, 'UTF-8');
+                $date = htmlspecialchars($row['dateandtime'], ENT_QUOTES, 'UTF-8');
+
+                $rows .= <<<HTML
+<tr>
+    <td>$index</td>
+    <td>$operating</td>
+    <td>$browser</td>
+    <td>$date</td>
+</tr>
+HTML;
+            }
+            echo $rows;
+        }
+    } else {
+        echo mysqli_error($connection);
+    }
+}
+
+
+
+
 if (isset($_POST['loginnow'])) {
     $mobileNumber = $_POST['mobileNumber'] ?? '';
     $password = $_POST['password'] ?? '';
@@ -2994,6 +3326,10 @@ if (isset($_POST['loginnow'])) {
     // Sanitize input
     $mobileNumber = trim($mobileNumber);
     $password = trim($password);
+
+    $operating = $_POST['operating']; 
+    $browser = $_POST['browser']; 
+    $userAgent = $_POST['userAgent']; 
 
     // Optional: Validate inputs
     if (empty($mobileNumber) || empty($password)) {
@@ -3009,7 +3345,7 @@ if (isset($_POST['loginnow'])) {
         echo "Query preparation failed: " . mysqli_error($connection);
         exit;
     }
-
+    
     mysqli_stmt_bind_param($stmt, "ss", $mobileNumber, $password);
 
     if (!mysqli_stmt_execute($stmt)) {
@@ -3027,7 +3363,13 @@ if (isset($_POST['loginnow'])) {
         $_SESSION['shop_logo'] = $row['shop_logo'];
         $_SESSION['secretkey'] = $row['secretkey'];
 
-        echo 1;
+        date_default_timezone_set('Asia/Kolkata');
+$date = date('Y-m-d H:i:s'); // Outputs: 2025-06-05 15:47:12
+
+         $insertIntoLoginHistory = "INSERT INTO login_history(dateandtime, operating, browser, useragent) VALUES('$date', '$operating','$browser','$userAgent')";
+         mysqli_query($connection,$insertIntoLoginHistory);  
+
+         echo 1;
     } else {
         echo 0; // No matching user
     }

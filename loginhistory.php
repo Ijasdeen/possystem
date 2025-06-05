@@ -189,20 +189,16 @@ require_once('layouts/header.php')
       
             <div class="container-xxl flex-grow-1 container-p-y">
  
-            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Home /</span> Customers</h4>
+            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Home /</span> Login History</h4>
 <div class="container">
   <div class="row">
     <div class="col-md-4">
-            <input type="search" placeholder="Searc by name,mobile,NIC,Gender" name="addcustomers" id="customersSearchdetails" class="form-control">
 
     </div>
   </div>
 </div>
                <div class="my-3">
-                <button class="btn btn-primary btn-sm" data-bs-target="#addCategoryModal" data-bs-toggle="modal">
-                <i class="menu-icon tf-icons bx bx-plus"></i> ADD Customers
-                </button>
-                
+                 
                </div>
               <div class="card">
                 <h5 class="card-header"></h5>
@@ -210,34 +206,17 @@ require_once('layouts/header.php')
                   <table class="table">
                     <thead>
                       <tr>
-                      <th>Actions</th>
                          <th>#</th>
-                        <th>Customer Name</th>
-                        <th>Customer Mobile</th>
-                        <th>Date of Birth</th>
-                        <th>NIC</th>
-                        <th>Gender</th>
-                        <th>Credit</th>
-                        <th>Debit</th>
-                        
+                        <th>Operating System</th>
+                        <th>Browser</th>
+                        <th>Date and time</th>
+                         
                       </tr>
                     </thead>
-                   <tbody id="showCustomers">
+                   <tbody id="loginhistory">
 
                    </tbody>
-                    <tfoot class="table-border-bottom-0">
-                    <tr>
-                      <th>Actions</th>
-                        <th>#</th>
-                       <th>Customer Name</th>
-                        <th>Customer Mobile</th>
-                        <th>Date of Birth</th>
-                        <th>NIC</th>
-                        <th>Gender</th>
-                        <th>Credit</th>
-                        <th>Debit</th>
-                       </tr>
-                    </tfoot>
+                    
                   </table>
                 </div>
               </div>
@@ -254,4 +233,4 @@ require_once('layouts/header.php')
 require_once('layouts/footer.php');
 ?>
 
- <script src="js/customers.js" defer></script>
+ <script src="js/loginhistory.js" defer></script>

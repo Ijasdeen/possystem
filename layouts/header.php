@@ -214,7 +214,7 @@ if(!isset($_SESSION['admin_name'])){
               <a href="javascript:void(0);"  class="menu-link menu-toggle">
                <i class="menu-icon tf-icons bx bx-group"></i>
 
-                <div data-i18n="Layouts">Stack holders</div>
+                <div data-i18n="Layouts">Stakeholders</div>
               </a>
 
               <ul class="menu-sub">
@@ -443,26 +443,35 @@ if(!isset($_SESSION['admin_name'])){
                       <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                      <a class="dropdown-item" href="#">
+                      <a class="dropdown-item" href="profileupdate.php">
                         <i class="bx bx-user me-2"></i>
                         <span class="align-middle">My Profile</span>
                       </a>
                     </li>
 
                     <li>
-                      <a class="dropdown-item" id="changePaswordtrigger" href="#" data-toggle="modal" data-target="#changePasswordmodal">
+                      <a class="dropdown-item" id="changePaswordtrigger" href="#updatePassword" data-toggle="modal" data-target="#changePasswordmodal">
                       <i class="bx bx-lock-alt me-2"></i>  
                    <span class="align-middle">Change Password</span>
                       </a>
                     </li>
 
                     <li>
-                      <a class="dropdown-item" href="#">
+                      <a class="dropdown-item" href="settings.php">
                         <i class="bx bx-cog me-2"></i>
                         <span class="align-middle">Settings</span>
                       </a>
                     </li>
                    
+
+                    <li>
+                      <a class="dropdown-item" href="loginhistory.php">
+                        <i class="bx bx-history me-2"></i>
+                         <span class="align-middle">Login History</span>
+                      </a>
+                    </li>
+                   
+
                     <li>
                       <div class="dropdown-divider"></div>
                     </li>
@@ -480,7 +489,6 @@ if(!isset($_SESSION['admin_name'])){
           </nav>
 
 
-          
 
 
          

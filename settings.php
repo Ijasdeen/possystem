@@ -193,54 +193,59 @@ require_once('layouts/header.php')
 <div class="container">
   <div class="row">
     <div class="col-md-4">
-            <input type="search" placeholder="Searc by name,mobile,NIC,Gender" name="addcustomers" id="customersSearchdetails" class="form-control">
 
     </div>
   </div>
 </div>
                <div class="my-3">
-                <button class="btn btn-primary btn-sm" data-bs-target="#addCategoryModal" data-bs-toggle="modal">
-                <i class="menu-icon tf-icons bx bx-plus"></i> ADD Customers
-                </button>
+             
                 
                </div>
-              <div class="card">
-                <h5 class="card-header"></h5>
-                <div class="table-responsive text-nowrap">
-                  <table class="table">
-                    <thead>
-                      <tr>
-                      <th>Actions</th>
-                         <th>#</th>
-                        <th>Customer Name</th>
-                        <th>Customer Mobile</th>
-                        <th>Date of Birth</th>
-                        <th>NIC</th>
-                        <th>Gender</th>
-                        <th>Credit</th>
-                        <th>Debit</th>
-                        
-                      </tr>
-                    </thead>
-                   <tbody id="showCustomers">
+           <div class="card">
+            <div class="card-body">
+                <!-- List group -->
+  <div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="list-group" id="myList" role="tablist">
+  <a class="list-group-item list-group-item-action active" data-bs-toggle="list" href="#home" role="tab">SMS setting</a>
+  <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#profile" role="tab">Profile</a>
+  <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#messages" role="tab">Messages</a>
+  <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#settings" role="tab">Settings</a>
+</div>
+        </div>
+        <div class="col">
+            <div class="tab-content mt-2">
+  <div class="tab-pane fade show active" id="home" role="tabpanel">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+               
+               <div class="form-check">
+  <input class="form-check-input" type="checkbox" value="" id="myCheckbox"
+         style="width: 1.5em; height: 1.5em;">
+  <label class="form-check-label" for="myCheckbox">
+    Send welcome message to customer
+  </label>
+</div>
 
-                   </tbody>
-                    <tfoot class="table-border-bottom-0">
-                    <tr>
-                      <th>Actions</th>
-                        <th>#</th>
-                       <th>Customer Name</th>
-                        <th>Customer Mobile</th>
-                        <th>Date of Birth</th>
-                        <th>NIC</th>
-                        <th>Gender</th>
-                        <th>Credit</th>
-                        <th>Debit</th>
-                       </tr>
-                    </tfoot>
-                  </table>
-                </div>
-              </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div class="tab-pane fade" id="profile" role="tabpanel">Profile content</div>
+  <div class="tab-pane fade" id="messages" role="tabpanel">Messages content</div>
+  <div class="tab-pane fade" id="settings" role="tabpanel">Settings content</div>
+</div>
+        </div>
+    </div>
+  </div>
+
+<!-- Tab panes -->
+
+
+            </div>
+           </div>
             
             </div>
            

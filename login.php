@@ -225,6 +225,25 @@ if (isset($_SESSION['admin_name'])) {
       >
     </div>
 
+     
+    <div class="modal fade" id="exampleModaltitlesection">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
     <script src="assets/vendor/libs/jquery/jquery.js"></script>
@@ -255,6 +274,8 @@ if (isset($_SESSION['admin_name'])) {
     <script async defer src="https://buttons.github.io/buttons.js"></script>
 
     <script>
+  
+
         $(document).ready(function(){
 
             $('#nameBasicsection').on('keypress', function(e) {
@@ -294,22 +315,77 @@ if (isset($_SESSION['admin_name'])) {
             });
 
 
+            function openFullScreen() {
+    var elem = document.documentElement; // Whole page
+
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) { // Safari
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { // IE11
+        elem.msRequestFullscreen();
+    }
+}
+
+
+openFullScreen(); 
 
 
 
+  $('input').on('keypress', function(e) {
+        if (e.which === 13) {
+            e.preventDefault();
+            var inputs = $('input[type="text"], input[type="email"], input[type="password"], input[type="tel"]');
+            var index = inputs.index(this);
+            if (index + 1 < inputs.length) {
+                inputs.eq(index + 1).focus();
+            } else {
+                $('#formAuthentication').submit();
+            }
+        }
+    });
 
-            $('input').on('keypress', function(e) {
-                if (e.which === 13) { // Enter key pressed
-                    e.preventDefault(); // Prevent form submission
-                    var inputs = $('input');
-                    var index = inputs.index(this);
-                    if (index + 1 < inputs.length) {
-                        inputs.eq(index + 1).focus(); // Focus on the next input
-                    } else {
-                        $('#formAuthentication').submit(); // Submit the form if no input is left
-                    }
-                }
-            });
+     $('#password').on('keypress', function (e) {
+        if (e.which === 13) { // Enter key
+            e.preventDefault(); // Prevent default Enter key behavior
+            $('#formAuthentication').submit(); // Submit the form
+        }
+    });
+
+     function getReadableDeviceInfo() {
+    const ua = navigator.userAgent;
+    let os = "Unknown OS";
+    let browser = "Unknown Browser";
+
+    // Detect OS
+    if (ua.indexOf("Windows NT 10.0") !== -1) os = "Windows 10";
+    else if (ua.indexOf("Windows NT 6.3") !== -1) os = "Windows 8.1";
+    else if (ua.indexOf("Windows NT 6.2") !== -1) os = "Windows 8";
+    else if (ua.indexOf("Windows NT 6.1") !== -1) os = "Windows 7";
+    else if (ua.indexOf("Mac OS X") !== -1) os = "macOS";
+    else if (ua.indexOf("Android") !== -1) os = "Android";
+    else if (ua.indexOf("iPhone") !== -1) os = "iOS";
+    else if (ua.indexOf("Linux") !== -1) os = "Linux";
+
+    // Detect Browser
+    if (ua.indexOf("Chrome") !== -1 && ua.indexOf("Edg") === -1) {
+        browser = "Google Chrome";
+    } else if (ua.indexOf("Firefox") !== -1) {
+        browser = "Mozilla Firefox";
+    } else if (ua.indexOf("Safari") !== -1 && ua.indexOf("Chrome") === -1) {
+        browser = "Safari";
+    } else if (ua.indexOf("Edg") !== -1) {
+        browser = "Microsoft Edge";
+    } else if (ua.indexOf("MSIE") !== -1 || ua.indexOf("Trident/") !== -1) {
+        browser = "Internet Explorer";
+    }
+
+    return {
+        os: os,
+        browser: browser,
+        userAgent: ua
+    };
+}
 
 
                 $('#formAuthentication').on('submit', function(e) {
@@ -328,6 +404,7 @@ if (isset($_SESSION['admin_name'])) {
                         return false; 
                     }
 
+                    const deviceInfo = getReadableDeviceInfo();
 
                     $.ajax({
                         url: 'action.php',
@@ -335,6 +412,9 @@ if (isset($_SESSION['admin_name'])) {
                         data: {
                             mobileNumber: mobileNumber,
                             password: password,
+                            operating : deviceInfo.os, 
+                            browser:deviceInfo.browser, 
+                            userAgent:deviceInfo.userAgent, 
                             loginnow:55
                         },
                         success: function(response) {
@@ -343,7 +423,7 @@ if (isset($_SESSION['admin_name'])) {
                             if (response == 1) {
                                window.location.reload(); 
                             } else {
-                                alert('Invalid login credentials. Please try again.');
+                                toastr.error('Invalid login credentials. Please try again.');
                             }
                         },
                        error: function(xhr, status, error) {

@@ -14,10 +14,127 @@ $(document).ready(function() {
             toastr.error('Failed to fetch customers.');
             }
         });
-     }
+     
+    }
 
      showOffCustomers(); 
 
+       $('body').on('click','.showoffopeningbalance',function(){
+          $('#customer_name').focus(); 
+          let myid = $(this).attr('myid'); 
+          let debit = $(this).attr('debit'); 
+          $("#customer_amount").val(debit); 
+          sessionStorage.setItem('myid',myid); 
+         $('#openingbalancePanel').modal('show');
+
+       }); 
+
+
+    $('body').on('click', '.baddebitdeduct', function() {
+    let myid = $(this).attr('myid'); 
+    let debit = $(this).attr('debit');
+    let credit = $(this).attr('credit');
+ 
+
+    debit = parseFloat(debit);
+    credit = parseFloat(credit);
+
+    
+    if (isNaN(debit) || isNaN(credit)) {
+        toastr.error(`Invalid number format in debit or credit.`); 
+        return;
+    }
+
+    // Optional: fix to 2 decimal places
+    debit = debit.toFixed(2);
+    credit = credit.toFixed(2);
+
+    let outstanding = (debit - credit);
+    sessionStorage.setItem('outstanding',outstanding); 
+    sessionStorage.setItem('myid',myid); 
+     
+    $("#fixHtmlsection").modal('show'); 
+    $('#outstnadingamounthtml').html('Rs. '+parseFloat(outstanding).toFixed(2)); 
+  
+});
+
+    $('#uaddtheamountform').on('submit',function(e){
+        e.preventDefault(); 
+        let ucustomer_amount = $('#ucustomer_amount').val().trim(); 
+
+        if(ucustomer_amount=='' || !ucustomer_amount){
+            $('#ucustomer_amount').css('border','2px solid red').focus(); 
+             toastr.info("Please enter the customer name");
+              return false; 
+        }
+
+        $.ajax({
+            url:'action.php', 
+            method:'POST', 
+            data:{
+                ucustomer_amount:ucustomer_amount, 
+                myid: sessionStorage.getItem('myid'), 
+                addthecustomersection:55
+            },
+            success:function(data){
+                if(data==1){
+                $("#fixHtmlsection").modal('hide'); 
+                toastr.info("Updated successfully"); 
+                    return false; 
+                }
+                else {
+                    toastr.info(data); 
+                }
+            },
+            error:function(err){
+                alert("Error found in" + err); 
+            }
+        })
+
+
+    }); 
+
+
+
+
+
+       $('#addtheamountform').on('submit',function(e){
+        e.preventDefault();
+        let customer_amount = $("#customer_amount").val(); 
+        if(customer_amount==''){
+            toastr.info("Please enter the customer amount"); 
+            $('#customer_amount').css('border','2px solid red').focus(); 
+            return false; 
+        }
+
+          if(isNaN(customer_amount)){
+              toastr.error("Only digits are acceptable");
+                  $('#customer_amount').css('border','2px solid red').focus(); 
+            return false; 
+          }
+
+            $.ajax({
+            url: 'action.php',
+            type: 'POST',
+            data: { customer_amount: customer_amount, 
+                myid : sessionStorage.getItem('myid'), 
+                addtheamountform:55 },
+            success: function(response) {
+                if(response==1){
+                    toastr.success("Opening balance added"); 
+                     $('#openingbalancePanel').modal('hide'); 
+                }
+                else {
+                    alert(response); 
+                }
+            },
+            error: function(xhr, status, error) {
+            toastr.error('Failed to fetch customers.');
+            }
+        });
+    
+
+       }); 
 
        $('body').on('click','.editCustomers',function(){
         let customerId = $(this).attr('myid'); 

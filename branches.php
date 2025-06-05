@@ -163,8 +163,15 @@ require_once('layouts/header.php')
             <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Home /</span> Branches</h4>
 
               <div class="my-3">
-                <input type="search" placeholder="Search by name, address,mobile, landline, email" 
+                <div class="container">
+                  <div class="row">
+                    <div class="col-md-3">
+                                      <input type="search" placeholder="Search by name, address,mobile, landline, email" 
                 name="" id="branchesSearchlineup" class="form-control">
+                    </div>
+                  </div>
+                </div>
+
               </div>
                <div class="my-3">
                 <button class="btn btn-primary btn-sm" data-bs-target="#addCategoryModal" data-bs-toggle="modal">
