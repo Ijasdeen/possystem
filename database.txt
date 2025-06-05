@@ -1,0 +1,975 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Jun 06, 2025 at 12:44 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `possystem`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admin`
+--
+
+CREATE TABLE `admin` (
+  `id` int(11) NOT NULL,
+  `admin_name` varchar(255) DEFAULT NULL,
+  `shop_name` varchar(255) DEFAULT NULL,
+  `shop_logo` varchar(255) DEFAULT NULL,
+  `secretkey` varchar(255) DEFAULT NULL,
+  `loginkey` varchar(255) DEFAULT NULL,
+  `mobilenumber` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `admin`
+--
+
+INSERT INTO `admin` (`id`, `admin_name`, `shop_name`, `shop_logo`, `secretkey`, `loginkey`, `mobilenumber`, `password`) VALUES
+(1, 'Rahmath texts ', 'Rahmath', '1748953505_person1.jpg', 'TRS2142FR232', 'FRDS332', '0774605737', '1234');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `assign`
+--
+
+CREATE TABLE `assign` (
+  `id` int(11) NOT NULL,
+  `branch_id_fk` int(11) DEFAULT NULL,
+  `warehouse` varchar(255) DEFAULT NULL,
+  `store` varchar(255) DEFAULT NULL,
+  `branchname` varchar(255) DEFAULT NULL,
+  `cashiers` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `assign`
+--
+
+INSERT INTO `assign` (`id`, `branch_id_fk`, `warehouse`, `store`, `branchname`, `cashiers`) VALUES
+(1, 3, '4', '5', 'David warner', '4'),
+(2, 3, '4', '5', 'David warner', '4,5');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `assigned_bussiness`
+--
+
+CREATE TABLE `assigned_bussiness` (
+  `id` int(11) NOT NULL,
+  `branch_id_fk` int(11) DEFAULT NULL,
+  `warehouse_id_fk` int(11) DEFAULT NULL,
+  `cashier_id_fk` int(11) DEFAULT NULL,
+  `store_id_fk` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `branches`
+--
+
+CREATE TABLE `branches` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `mobile` varchar(20) DEFAULT NULL,
+  `landline` varchar(20) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `branches`
+--
+
+INSERT INTO `branches` (`id`, `name`, `address`, `mobile`, `landline`, `email`) VALUES
+(3, 'David warner', 'address', '0758953142', '0774605737', 'asdasd@gmail.com'),
+(4, 'Asdasd', 'adasd', '0758953142', '0758953142', 'asdasd@gmail.com');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `brand`
+--
+
+CREATE TABLE `brand` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `brand`
+--
+
+INSERT INTO `brand` (`id`, `name`) VALUES
+(6, 'David Warner'),
+(7, 'Warner');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cashiers`
+--
+
+CREATE TABLE `cashiers` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cashiers`
+--
+
+INSERT INTO `cashiers` (`id`, `name`) VALUES
+(4, 'Adasd'),
+(5, 'Asdasd'),
+(6, 'Ewe');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `categories`
+--
+
+CREATE TABLE `categories` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `code` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `categories`
+--
+
+INSERT INTO `categories` (`id`, `name`, `code`) VALUES
+(10, 'Cat', 'cat 11'),
+(11, 'Cat line up 11', 'Cat side');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `color`
+--
+
+CREATE TABLE `color` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `color`
+--
+
+INSERT INTO `color` (`id`, `name`) VALUES
+(4, 'Blue Titan'),
+(5, 'Red'),
+(6, 'Brown');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customers`
+--
+
+CREATE TABLE `customers` (
+  `id` int(11) NOT NULL,
+  `customer_name` varchar(100) DEFAULT NULL,
+  `customer_mobile` varchar(20) DEFAULT NULL,
+  `dob` date DEFAULT NULL,
+  `customer_nic` varchar(50) DEFAULT NULL,
+  `gender` enum('Male','Female') DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `credit` decimal(10,2) DEFAULT NULL,
+  `debit` decimal(10,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `customers`
+--
+
+INSERT INTO `customers` (`id`, `customer_name`, `customer_mobile`, `dob`, `customer_nic`, `gender`, `created_at`, `updated_at`, `credit`, `debit`) VALUES
+(7, 'Customer name', '0758953142', '2025-01-01', '075555656', 'Male', NULL, NULL, 0.00, 50.00),
+(8, 'Ijas deen', '0774605737', '0000-00-00', '', '', NULL, NULL, 0.00, 0.00);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employees`
+--
+
+CREATE TABLE `employees` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `address` text DEFAULT NULL,
+  `nic` varchar(20) DEFAULT NULL,
+  `working_days` int(11) DEFAULT 0,
+  `basic_salary` decimal(10,2) DEFAULT 0.00,
+  `epf` tinyint(1) DEFAULT 0,
+  `epf_basic_salary` decimal(10,2) DEFAULT 0.00,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `mobilenumber` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `employees`
+--
+
+INSERT INTO `employees` (`id`, `name`, `address`, `nic`, `working_days`, `basic_salary`, `epf`, `epf_basic_salary`, `created_at`, `mobilenumber`) VALUES
+(1, 'NBa', NULL, '199726000130', 0, 10.00, 1, 20.00, '2025-06-03 18:29:44', '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `expenses`
+--
+
+CREATE TABLE `expenses` (
+  `id` int(11) NOT NULL,
+  `expcat_id_fk` int(11) DEFAULT NULL,
+  `amount` decimal(10,2) DEFAULT NULL,
+  `reason` varchar(255) DEFAULT NULL,
+  `datetime` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `expenses`
+--
+
+INSERT INTO `expenses` (`id`, `expcat_id_fk`, `amount`, `reason`, `datetime`) VALUES
+(1, 2, 5000.00, 'asdasd', '2025-05-17');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `expense_categories`
+--
+
+CREATE TABLE `expense_categories` (
+  `id` int(11) NOT NULL,
+  `expense_categories_name` varchar(255) DEFAULT NULL,
+  `showcashier` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `expense_categories`
+--
+
+INSERT INTO `expense_categories` (`id`, `expense_categories_name`, `showcashier`) VALUES
+(1, 'Asdasd', 1),
+(2, 'Asdasd3222', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `login_history`
+--
+
+CREATE TABLE `login_history` (
+  `id` int(11) NOT NULL,
+  `dateandtime` varchar(255) DEFAULT NULL,
+  `operating` varchar(255) DEFAULT NULL,
+  `browser` varchar(255) DEFAULT NULL,
+  `useragent` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `login_history`
+--
+
+INSERT INTO `login_history` (`id`, `dateandtime`, `operating`, `browser`, `useragent`) VALUES
+(1, '2025-06-05 23:47:18', 'Windows 10', 'Google Chrome', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 OPR/119.0.0.0'),
+(2, '2025-06-06 00:25:29', 'Windows 10', 'Google Chrome', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 OPR/119.0.0.0');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pr_items`
+--
+
+CREATE TABLE `pr_items` (
+  `id` int(11) NOT NULL,
+  `barcode` varchar(100) DEFAULT NULL,
+  `item_code` varchar(100) DEFAULT NULL,
+  `invoice_item_name` varchar(255) DEFAULT NULL,
+  `item_name` varchar(255) DEFAULT NULL,
+  `tag_name` varchar(100) DEFAULT NULL,
+  `category_id` int(11) DEFAULT NULL,
+  `subcategory1_id` int(11) DEFAULT NULL,
+  `subcategory2_id` int(11) DEFAULT NULL,
+  `subcategory3_id` int(11) DEFAULT NULL,
+  `color_id` int(11) DEFAULT NULL,
+  `brand_id` int(11) DEFAULT NULL,
+  `unit_id` int(11) DEFAULT NULL,
+  `quantity` int(11) DEFAULT NULL,
+  `cost_price` decimal(10,2) DEFAULT NULL,
+  `retail_mini_price` decimal(10,2) DEFAULT NULL,
+  `retail_price` decimal(10,2) DEFAULT NULL,
+  `retail_discount` decimal(10,2) DEFAULT NULL,
+  `retail_discount_percent` decimal(5,2) DEFAULT NULL,
+  `sale_price` decimal(10,2) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `purchase_id_fk` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `pr_items`
+--
+
+INSERT INTO `pr_items` (`id`, `barcode`, `item_code`, `invoice_item_name`, `item_name`, `tag_name`, `category_id`, `subcategory1_id`, `subcategory2_id`, `subcategory3_id`, `color_id`, `brand_id`, `unit_id`, `quantity`, `cost_price`, `retail_mini_price`, `retail_price`, `retail_discount`, `retail_discount_percent`, `sale_price`, `created_at`, `updated_at`, `purchase_id_fk`) VALUES
+(1, 'asdasd', 'asdasd', 'asdasd', 'asdsad', 'asdasd', 2, 3, 3, 0, 4, 6, 1, 10, 200.00, 300.00, 300.00, 0.00, 0.00, 300.00, '2025-05-27 04:04:48', '2025-05-27 04:04:48', 12),
+(2, '23423432', '2004', 'asdasd', 'asdsad', 'asdasd', 2, 3, 3, 0, 4, 6, 1, 59, 200.00, 300.00, 250.00, 10.00, 10.00, 250.00, '2025-05-27 04:07:04', '2025-05-27 04:07:04', 13),
+(3, '324234', '234234', 'asdasd', 'asdad', 'sadasd', 2, 3, 3, 0, 4, 6, 1, 10, 200.00, 250.00, 250.00, 0.00, 0.00, 250.00, '2025-05-27 04:10:33', '2025-05-27 04:10:33', 14),
+(4, '234234', '234234', 'asdasd', 'asdads', 'asdasd', 2, 3, 3, 0, 5, 6, 1, 16, 200.00, 300.00, 350.00, 0.00, 0.00, 350.00, '2025-05-27 04:12:28', '2025-05-27 04:12:28', 15),
+(5, 'asdasd', '4324234', 'asdasd', 'adasd', 'asdasd', 2, 3, 3, 0, 5, 7, 3, 14, 200.00, 250.00, 250.00, 0.00, 0.00, 250.00, '2025-05-27 04:26:37', '2025-05-27 04:26:37', 16),
+(6, '', '2500', '5000', 'Item name', 'Tag name', 2, 3, 3, 0, 5, 6, 1, 15, 22.00, 30.00, 35.00, 0.00, 0.00, 36.00, '2025-05-27 04:29:12', '2025-05-27 04:29:12', 17),
+(7, 'asdasd', 'asdsad', 'asdasd', 'asdsad', 'sadsad', 2, 3, 3, 0, 4, 6, 3, 10, 200.00, 300.00, 350.00, 0.00, 0.00, 350.00, '2025-05-27 04:39:47', '2025-05-27 04:39:47', 18),
+(8, '234234324', 'asdasd', '400', 'asdasd', 'asad', 2, 3, 3, 0, 5, 6, 3, 10, 200.00, 300.00, 350.00, 0.00, 0.00, 400.00, '2025-05-27 04:41:39', '2025-05-27 04:41:39', 19);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `purcahse`
+--
+
+CREATE TABLE `purcahse` (
+  `id` int(11) NOT NULL,
+  `supplier_date` varchar(255) DEFAULT NULL,
+  `tagname` varchar(255) DEFAULT NULL,
+  `supplierInvoiceNo` varchar(255) DEFAULT NULL,
+  `purchaseInvoiceNo` varchar(255) DEFAULT NULL,
+  `purcahseplace` varchar(255) DEFAULT 'warehouse',
+  `place_id_fk` int(11) DEFAULT NULL,
+  `batch_id` int(11) NOT NULL DEFAULT 1,
+  `supplier_id_fk` int(11) DEFAULT NULL,
+  `purcahsed_datetime` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `purcahse`
+--
+
+INSERT INTO `purcahse` (`id`, `supplier_date`, `tagname`, `supplierInvoiceNo`, `purchaseInvoiceNo`, `purcahseplace`, `place_id_fk`, `batch_id`, `supplier_id_fk`, `purcahsed_datetime`) VALUES
+(1, '2025-05-27', NULL, NULL, NULL, 'warehouse', 1, 1, 17, NULL),
+(2, '2025-05-27', 'asdasd', NULL, NULL, 'warehouse', 1, 1, 17, NULL),
+(3, '2025-05-28', 'asdasd', NULL, NULL, 'warehouse', 1, 1, 17, NULL),
+(4, '2025-05-27', 'sadasd', '2500', NULL, 'warehouse', 1, 1, 17, NULL),
+(5, '2025-05-27', 'adasd', '44', '1202505275', 'warehouse', 1, 1, 17, NULL),
+(6, '', 'asdasdasdasd', '', '1202505276', 'warehouse', 1, 1, 0, NULL),
+(7, '', 'sadasd', '', '1202505277', 'warehouse', 1, 1, 0, NULL),
+(8, '2025-05-27', 'adasd', '234234', '1202505278', 'warehouse', 1, 1, 17, NULL),
+(9, '', 'asdasd', '', '1202505279', 'warehouse', 1, 1, 0, NULL),
+(10, '', 'asdasd', '', '12025052710', 'warehouse', 1, 1, 0, NULL),
+(11, '', 'asdasd', '', '12025052711', 'warehouse', 1, 1, 0, NULL),
+(12, '2025-05-27', 'asdasd', 'IN-636', '12025052712', 'warehouse', 1, 1, 17, NULL),
+(13, '', 'asdasd', '', '12025052713', 'warehouse', 1, 1, 0, NULL),
+(14, '', 'sadasd', '', '12025052714', 'warehouse', 1, 1, 0, NULL),
+(15, '', 'asdasd', '', '12025052715', 'warehouse', 1, 1, 0, NULL),
+(16, '', 'asdasd', '', '12025052716', 'warehouse', 1, 1, 0, '2025-05-27 09:56:37'),
+(17, '2025-05-27', 'Tag name', '123', '12025052717', 'warehouse', 1, 1, 17, '2025-05-27 09:59:12'),
+(18, '2025-05-21', 'sadsad', '21123', '12025052718', 'warehouse', 1, 1, 18, '2025-05-27 10:09:47'),
+(19, '2025-05-27', 'asad', 'asdasd', '12025052719', 'warehouse', 1, 1, 17, '2025-05-27 10:11:39');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sizes`
+--
+
+CREATE TABLE `sizes` (
+  `id` int(11) NOT NULL,
+  `pr_id_fk` int(11) DEFAULT NULL,
+  `size` varchar(255) DEFAULT NULL,
+  `qty` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `sizes`
+--
+
+INSERT INTO `sizes` (`id`, `pr_id_fk`, `size`, `qty`) VALUES
+(1, 4, 'Xl', '5'),
+(2, 4, '14', '5'),
+(3, 4, '8', '6'),
+(4, 5, 'XL', '4'),
+(5, 5, 'L', '5'),
+(6, 5, 'R', '5'),
+(7, 6, 'Xl', '5'),
+(8, 6, 'R', '5'),
+(9, 6, 'R', '5'),
+(10, 7, 'Xl', '5'),
+(11, 7, 'R', '5'),
+(12, 8, 'Xl', '5'),
+(13, 8, 'F', '5');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `store`
+--
+
+CREATE TABLE `store` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `store`
+--
+
+INSERT INTO `store` (`id`, `name`) VALUES
+(4, 'Reward'),
+(5, 'Sfsd'),
+(7, 'Asdasdasd');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `subcategory1`
+--
+
+CREATE TABLE `subcategory1` (
+  `id` int(11) NOT NULL,
+  `category_id_fk` int(11) DEFAULT NULL,
+  `category_name` varchar(255) DEFAULT NULL,
+  `subcategoryname` varchar(255) DEFAULT NULL,
+  `subcategory1code` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `subcategory1`
+--
+
+INSERT INTO `subcategory1` (`id`, `category_id_fk`, `category_name`, `subcategoryname`, `subcategory1code`) VALUES
+(3, 2, 'Category 1', 'asdasdsad22', 'sadasdasd'),
+(4, 3, 'Category 12', 'Asdasdasd2', 'asdsad'),
+(5, 3, 'Category 12', 'Asdasdadasd22', '3434'),
+(7, 11, 'Cat line up 11', 'Asdsad', 'asdsad');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `subcategory2`
+--
+
+CREATE TABLE `subcategory2` (
+  `id` int(11) NOT NULL,
+  `category_name` varchar(255) DEFAULT NULL,
+  `subcategory1_name` varchar(255) DEFAULT NULL,
+  `subcategory2_name` varchar(255) DEFAULT NULL,
+  `subcategory2_code` varchar(255) DEFAULT NULL,
+  `subcategory1_id_fk` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `category_id_fk` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `subcategory2`
+--
+
+INSERT INTO `subcategory2` (`id`, `category_name`, `subcategory1_name`, `subcategory2_name`, `subcategory2_code`, `subcategory1_id_fk`, `created_at`, `updated_at`, `category_id_fk`) VALUES
+(3, 'Category 1', 'asdasdsad22', 'Sub category 2', '44', 3, '2025-05-27 02:56:24', '2025-05-27 02:56:24', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `subcategory3`
+--
+
+CREATE TABLE `subcategory3` (
+  `id` int(11) NOT NULL,
+  `category_id_fk` int(11) DEFAULT NULL,
+  `categoryname` varchar(255) DEFAULT NULL,
+  `subcategory_id_fk` int(11) DEFAULT NULL,
+  `subcategory1_name` varchar(255) DEFAULT NULL,
+  `subcategory2_id_fk` int(11) DEFAULT NULL,
+  `subcategory2_name` varchar(255) DEFAULT NULL,
+  `subcategory3_name` varchar(255) DEFAULT NULL,
+  `subcategory3_code` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `subcategory3`
+--
+
+INSERT INTO `subcategory3` (`id`, `category_id_fk`, `categoryname`, `subcategory_id_fk`, `subcategory1_name`, `subcategory2_id_fk`, `subcategory2_name`, `subcategory3_name`, `subcategory3_code`) VALUES
+(1, 2, 'Category 1', 3, 'asdasdsad22', 3, 'Sub category 2', 'assad', 'asdsad'),
+(2, 2, 'Category 1', 3, 'asdasdsad22', 3, 'Sub category 2', 'asasdasdasd', 'asd');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `supplier`
+--
+
+CREATE TABLE `supplier` (
+  `id` int(11) NOT NULL,
+  `supplier_name` varchar(255) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `mobile` varchar(20) DEFAULT NULL,
+  `telephone` varchar(20) DEFAULT NULL,
+  `short_name` varchar(100) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `contact_name` varchar(255) DEFAULT NULL,
+  `contact_number1` varchar(20) DEFAULT NULL,
+  `contact_number2` varchar(20) DEFAULT NULL,
+  `warehouse_address` text DEFAULT NULL,
+  `supplier_category` varchar(200) DEFAULT NULL,
+  `date` varchar(255) DEFAULT NULL,
+  `location` text DEFAULT NULL,
+  `city` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `supplier`
+--
+
+INSERT INTO `supplier` (`id`, `supplier_name`, `address`, `mobile`, `telephone`, `short_name`, `email`, `contact_name`, `contact_number1`, `contact_number2`, `warehouse_address`, `supplier_category`, `date`, `location`, `city`) VALUES
+(28, 'David warner', 'address', '0774605737', '0774605737', 'warner', 'ff@gmail.com', 'asdad', '0758953142', '0758953142', 'asd', 'Local', '2025-06-06 04:04:55', '', 'oddamvadi');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `suppliertype`
+--
+
+CREATE TABLE `suppliertype` (
+  `id` int(11) NOT NULL,
+  `type` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `suppliertype`
+--
+
+INSERT INTO `suppliertype` (`id`, `type`) VALUES
+(1, 'We'),
+(2, 'Ijas'),
+(3, 'My system'),
+(4, 'Ft'),
+(5, 'Ttt'),
+(6, 'Afdasd'),
+(7, 'Asd'),
+(8, 'S');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `supplier_bank_details`
+--
+
+CREATE TABLE `supplier_bank_details` (
+  `id` int(11) NOT NULL,
+  `bank_account_name` varchar(255) DEFAULT NULL,
+  `account_number` varchar(50) DEFAULT NULL,
+  `bank` varchar(255) DEFAULT NULL,
+  `branch` varchar(255) DEFAULT NULL,
+  `supplier_id_fk` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `supplier_bank_details`
+--
+
+INSERT INTO `supplier_bank_details` (`id`, `bank_account_name`, `account_number`, `bank`, `branch`, `supplier_id_fk`, `created_at`, `updated_at`) VALUES
+(1, 'David', '324324', 'adasd', 'asdasd', NULL, '2025-05-21 23:00:43', NULL),
+(2, 'Ijas', '324324', 'adasd', 'asdasd', NULL, '2025-05-21 23:01:23', NULL),
+(3, 'David', '324324', 'adasd', 'asdasd', NULL, '2025-05-21 23:02:39', NULL),
+(4, 'Ijas', '324324', 'adasd', 'asdasd', NULL, '2025-05-21 23:02:39', NULL),
+(19, 'Ijas', '324234', 'adasd', 'asdasd', NULL, '2025-05-21 23:14:27', NULL),
+(20, 'Ijas', '07589531654564', 'commercial', 'valaichenai', NULL, '2025-06-06 02:31:14', NULL),
+(21, 'David warner', '324324', 'Commercial', 'Valaichenai', 28, '2025-06-06 04:04:59', NULL),
+(22, 'David warner', '3254324', 'Sampath', 'Oddamavadi', 28, '2025-06-06 04:04:59', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `unit`
+--
+
+CREATE TABLE `unit` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `unit`
+--
+
+INSERT INTO `unit` (`id`, `name`) VALUES
+(1, 'SET'),
+(2, 'PAIR'),
+(3, 'PCS');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `warehouse`
+--
+
+CREATE TABLE `warehouse` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `mobile` varchar(20) DEFAULT NULL,
+  `landline` varchar(20) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `warehouse`
+--
+
+INSERT INTO `warehouse` (`id`, `name`, `address`, `mobile`, `landline`, `email`) VALUES
+(4, 'Ijas deen', 'aadress', '0758953142', '0758953142', 'asdasd@gmail.com');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `admin`
+--
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `assign`
+--
+ALTER TABLE `assign`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `assigned_bussiness`
+--
+ALTER TABLE `assigned_bussiness`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `branches`
+--
+ALTER TABLE `branches`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `brand`
+--
+ALTER TABLE `brand`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `cashiers`
+--
+ALTER TABLE `cashiers`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `color`
+--
+ALTER TABLE `color`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `customers`
+--
+ALTER TABLE `customers`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `employees`
+--
+ALTER TABLE `employees`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `expenses`
+--
+ALTER TABLE `expenses`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `expense_categories`
+--
+ALTER TABLE `expense_categories`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `login_history`
+--
+ALTER TABLE `login_history`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `pr_items`
+--
+ALTER TABLE `pr_items`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `purcahse`
+--
+ALTER TABLE `purcahse`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `sizes`
+--
+ALTER TABLE `sizes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `store`
+--
+ALTER TABLE `store`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `subcategory1`
+--
+ALTER TABLE `subcategory1`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_category_id_fk` (`category_id_fk`);
+
+--
+-- Indexes for table `subcategory2`
+--
+ALTER TABLE `subcategory2`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `subcategory3`
+--
+ALTER TABLE `subcategory3`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_category_id_fk` (`category_id_fk`),
+  ADD KEY `idx_subcategory_id_fk` (`subcategory_id_fk`),
+  ADD KEY `idx_subcategory2_id_fk` (`subcategory2_id_fk`);
+
+--
+-- Indexes for table `supplier`
+--
+ALTER TABLE `supplier`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `suppliertype`
+--
+ALTER TABLE `suppliertype`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `supplier_bank_details`
+--
+ALTER TABLE `supplier_bank_details`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `supplier_id_fk` (`supplier_id_fk`);
+
+--
+-- Indexes for table `unit`
+--
+ALTER TABLE `unit`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `warehouse`
+--
+ALTER TABLE `warehouse`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `admin`
+--
+ALTER TABLE `admin`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `assign`
+--
+ALTER TABLE `assign`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `assigned_bussiness`
+--
+ALTER TABLE `assigned_bussiness`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `branches`
+--
+ALTER TABLE `branches`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `brand`
+--
+ALTER TABLE `brand`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `cashiers`
+--
+ALTER TABLE `cashiers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `color`
+--
+ALTER TABLE `color`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `customers`
+--
+ALTER TABLE `customers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `employees`
+--
+ALTER TABLE `employees`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `expenses`
+--
+ALTER TABLE `expenses`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `expense_categories`
+--
+ALTER TABLE `expense_categories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `login_history`
+--
+ALTER TABLE `login_history`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `pr_items`
+--
+ALTER TABLE `pr_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `purcahse`
+--
+ALTER TABLE `purcahse`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- AUTO_INCREMENT for table `sizes`
+--
+ALTER TABLE `sizes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `store`
+--
+ALTER TABLE `store`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `subcategory1`
+--
+ALTER TABLE `subcategory1`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `subcategory2`
+--
+ALTER TABLE `subcategory2`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `subcategory3`
+--
+ALTER TABLE `subcategory3`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `supplier`
+--
+ALTER TABLE `supplier`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+
+--
+-- AUTO_INCREMENT for table `suppliertype`
+--
+ALTER TABLE `suppliertype`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `supplier_bank_details`
+--
+ALTER TABLE `supplier_bank_details`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- AUTO_INCREMENT for table `unit`
+--
+ALTER TABLE `unit`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `warehouse`
+--
+ALTER TABLE `warehouse`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `supplier_bank_details`
+--
+ALTER TABLE `supplier_bank_details`
+  ADD CONSTRAINT `supplier_bank_details_ibfk_1` FOREIGN KEY (`supplier_id_fk`) REFERENCES `supplier` (`id`) ON DELETE SET NULL;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
